@@ -8,7 +8,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using OpenBveApi;
 using OpenBveApi.Math;
-using OpenTK.Graphics.ES20;
 using RouteManager2.MessageManager;
 using SoundManager;
 
@@ -123,6 +122,20 @@ namespace OpenBve
 				get
 				{
 					return this.Cars.Length;
+				}
+			}
+
+			/// <inheritdoc/>
+			public override double Mass
+			{
+				get
+				{
+					double mass = 0;
+					for (int i = 0; i < Cars.Length; i++)
+					{
+						mass += Cars[i].CurrentMass;
+					}
+					return mass;
 				}
 			}
 
@@ -466,18 +479,16 @@ namespace OpenBve
 				// calculate center of mass position
 				double[] CenterOfCarPositions = new double[Cars.Length];
 				double CenterOfMassPosition = 0.0;
-				double TrainMass = 0.0;
 				for (int i = 0; i < Cars.Length; i++)
 				{
 					double pr = Cars[i].RearAxle.Follower.TrackPosition - Cars[i].RearAxle.Position;
 					double pf = Cars[i].FrontAxle.Follower.TrackPosition - Cars[i].FrontAxle.Position;
 					CenterOfCarPositions[i] = 0.5 * (pr + pf);
-					CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].Specs.MassCurrent;
-					TrainMass += Cars[i].Specs.MassCurrent;
+					CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].CurrentMass;
 				}
-				if (TrainMass != 0.0)
+				if (Mass != 0.0)
 				{
-					CenterOfMassPosition /= TrainMass;
+					CenterOfMassPosition /= Mass;
 				}
 				{ // coupler
 				  // determine closest cars
@@ -527,9 +538,9 @@ namespace OpenBve
 						double d = CenterOfCarPositions[p] - CenterOfCarPositions[s] - 0.5 * (Cars[p].Length + Cars[s].Length);
 						if (d < min)
 						{
-							double t = (min - d) / (Cars[p].Specs.MassCurrent + Cars[s].Specs.MassCurrent);
-							double tp = t * Cars[s].Specs.MassCurrent;
-							double ts = t * Cars[p].Specs.MassCurrent;
+							double t = (min - d) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
+							double tp = t * Cars[s].CurrentMass;
+							double ts = t * Cars[p].CurrentMass;
 							Cars[p].UpdateTrackFollowers(tp, false, false);
 							Cars[s].UpdateTrackFollowers(-ts, false, false);
 							CenterOfCarPositions[p] += tp;
@@ -538,9 +549,9 @@ namespace OpenBve
 						}
 						else if (d > max & !Cars[p].Derailed & !Cars[s].Derailed)
 						{
-							double t = (d - max) / (Cars[p].Specs.MassCurrent + Cars[s].Specs.MassCurrent);
-							double tp = t * Cars[s].Specs.MassCurrent;
-							double ts = t * Cars[p].Specs.MassCurrent;
+							double t = (d - max) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
+							double tp = t * Cars[s].CurrentMass;
+							double ts = t * Cars[p].CurrentMass;
 
 							Cars[p].UpdateTrackFollowers(-tp, false, false);
 							Cars[s].UpdateTrackFollowers(ts, false, false);
@@ -617,8 +628,8 @@ namespace OpenBve
 							double m = 0.0;
 							for (int k = i; k <= j; k++)
 							{
-								v += NewSpeeds[k] * Cars[k].Specs.MassCurrent;
-								m += Cars[k].Specs.MassCurrent;
+								v += NewSpeeds[k] * Cars[k].CurrentMass;
+								m += Cars[k].CurrentMass;
 							}
 							if (m != 0.0)
 							{
@@ -851,6 +862,8 @@ namespace OpenBve
 			{
 				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
 			}
+
+
 		}
 	}
 }

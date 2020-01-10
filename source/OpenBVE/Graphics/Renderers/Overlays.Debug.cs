@@ -122,11 +122,6 @@ namespace OpenBve.Graphics.Renderers
 					break;
 				}
 			}
-			double mass = 0.0;
-			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
-			{
-				mass += TrainManager.PlayerTrain.Cars[i].Specs.MassCurrent;
-			}
 			int hours = (int)Program.CurrentRoute.SecondsSinceMidnight / 3600,
 				remainder = (int)Program.CurrentRoute.SecondsSinceMidnight % 3600,
 				minutes = remainder / 60,
@@ -148,7 +143,7 @@ namespace OpenBve.Graphics.Renderers
 				"air density: " + TrainManager.PlayerTrain.Specs.CurrentAirDensity.ToString("0.0000", Culture) + " kg/m³",
 				"speed of sound: " + (Program.CurrentRoute.Atmosphere.GetSpeedOfSound(TrainManager.PlayerTrain.Specs.CurrentAirDensity) * 3.6).ToString("0.00", Culture) + " km/h",
 				"passenger ratio: " + TrainManager.PlayerTrain.Passengers.PassengerRatio.ToString("0.00"),
-				"total mass: " + mass.ToString("0.00", Culture) + " kg",
+				"total mass: " + TrainManager.PlayerTrain.Mass.ToString("0.00", Culture) + " kg",
 				"",
 				"=route",
 				"track limit: " + (TrainManager.PlayerTrain.CurrentRouteLimit == double.PositiveInfinity ? "unlimited" : ((TrainManager.PlayerTrain.CurrentRouteLimit * 3.6).ToString("0.0", Culture) + " km/h")),

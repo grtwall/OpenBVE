@@ -121,7 +121,6 @@ namespace OpenBve {
 			internal double BrakeDecelerationAtServiceMaximumPressure;
 			internal double BrakeControlSpeed;
 			internal double MotorDeceleration;
-			internal double Mass;
 			internal double ExposedFrontalArea;
 			internal double UnexposedFrontalArea;
 			internal double CoefficientOfStaticFriction;

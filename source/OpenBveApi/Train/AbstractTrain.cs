@@ -62,6 +62,15 @@ namespace OpenBveApi.Trains
 			}
 		}
 
+		/// <summary>Returns the total mass of all cars in the train</summary>
+		public virtual double Mass
+		{
+			get
+			{
+				return 0.0;
+			}
+		}
+
 		/// <summary>Derails a car within the train</summary>
 		/// <param name="CarIndex">The index of the car to derail</param>
 		/// <param name="ElapsedTime">The frame time elapsed</param>

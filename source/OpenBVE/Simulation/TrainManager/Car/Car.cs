@@ -69,7 +69,18 @@ namespace OpenBve
 			internal CameraAlignment InteriorCamera;
 
 			internal bool HasInteriorView = false;
-			
+
+			/// <inheritdoc/>
+			public override double CurrentMass
+			{
+				get
+				{
+					return EmptyMass + passengerMass;
+				}
+			}
+
+			/// <summary>The mass of the passengers within this car</summary> 
+			private double passengerMass;
 			internal Car(Train train, int index)
 			{
 				baseTrain = train;
@@ -157,6 +168,7 @@ namespace OpenBve
 				BeaconReceiver.UpdateAbsolute(b, false, false);
 			}
 
+			/// <inheritdoc/>
 			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
 			{
 				Direction = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
@@ -182,6 +194,7 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
 			public override double TrackPosition
 			{
 				get
@@ -1182,7 +1195,7 @@ namespace OpenBve
 								else
 								{
 									FrontAxle.CurrentWheelSlip = true;
-									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * Specs.MassCurrent;
+									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * CurrentMass;
 								}
 
 								if (a < wheelSlipAccelerationMotorRear)
@@ -1192,7 +1205,7 @@ namespace OpenBve
 								else
 								{
 									RearAxle.CurrentWheelSlip = true;
-									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * Specs.MassCurrent;
+									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * CurrentMass;
 								}
 
 								// Update readhesion device
@@ -1305,7 +1318,7 @@ namespace OpenBve
 						if (a > ra) a = ra;
 					}
 
-					double factor = Specs.MassEmpty / Specs.MassCurrent;
+					double factor = EmptyMass / CurrentMass;
 					if (a >= wheelSlipAccelerationBrakeFront)
 					{
 						wheellock = true;
@@ -1333,7 +1346,7 @@ namespace OpenBve
 				// motor
 				if (baseTrain.Handles.Reverser.Actual != 0)
 				{
-					double factor = Specs.MassEmpty / Specs.MassCurrent;
+					double factor = EmptyMass / CurrentMass;
 					if (Specs.CurrentAccelerationOutput > 0.0)
 					{
 						PowerRollingCouplerAcceleration +=
@@ -1442,6 +1455,16 @@ namespace OpenBve
 						Speed = CurrentSpeed + (a - b * (double) d) * TimeElapsed;
 					}
 				}
+			}
+
+			internal void UpdateMass()
+			{
+				double area = Width * Length;
+				const double passengersPerArea = 1.0; //Nominal 1 passenger per meter of interior space
+				double randomFactor = 0.9 + 0.2 * Program.RandomNumberGenerator.NextDouble();
+				double passengers = Math.Round(randomFactor * baseTrain.Passengers.PassengerRatio * passengersPerArea * area);
+				const double massPerPassenger = 70.0; //70kg mass per passenger
+				passengerMass = passengers * massPerPassenger;
 			}
 		}
 	}

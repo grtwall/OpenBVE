@@ -131,7 +131,10 @@ namespace OpenBve
 									Train.StationDepartureTime = Program.CurrentRoute.SecondsSinceMidnight + Program.CurrentRoute.Stations[i].StopTime;
 								}
 								Train.Passengers.PassengerRatio = Program.CurrentRoute.Stations[i].PassengerRatio;
-								UpdateTrainMassFromPassengerRatio(Train);
+								for (int j = 0; j < Train.Cars.Length; j++)
+								{
+									Train.Cars[j].UpdateMass();
+								}
 								if (Train.IsPlayerTrain)
 								{
 									double early = 0.0;
