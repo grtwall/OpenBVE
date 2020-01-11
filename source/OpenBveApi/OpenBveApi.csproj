@@ -194,6 +194,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <Compile Include="Train\AbstractCargo.cs" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

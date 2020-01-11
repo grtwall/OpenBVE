@@ -28,8 +28,7 @@ namespace OpenBve
 			internal Handles Handles;
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
-			internal TrainPassengers Passengers;
-			
+
 			internal double StationArrivalTime;
 			internal double StationDepartureTime;
 			internal bool StationDepartureSoundPlayed;
@@ -59,6 +58,22 @@ namespace OpenBve
 			internal double CriticalCollisionSpeedDifference = 8.0;
 
 			private double previousRouteLimit = 0.0;
+
+			/// <summary>Gets the average cargo loading ratio for this train</summary>
+			internal double CargoRatio
+			{
+				get
+				{
+					double r = 0;
+					for (int i = 0; i < Cars.Length; i++)
+					{
+						r += Cars[i].Cargo.Ratio;
+					}
+
+					r /= Cars.Length;
+					return r;
+				}
+			}
 
 			internal Train(TrainState state)
 			{
@@ -381,11 +396,12 @@ namespace OpenBve
 				Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
 				// update speeds
 				UpdateSpeeds(TimeElapsed);
-				// Update Run and Motor sounds
+				// Update car specific properties
 				for (int i = 0; i < Cars.Length; i++)
 				{
 					Cars[i].UpdateRunSounds(TimeElapsed);
 					Cars[i].UpdateMotorSounds(TimeElapsed);
+					Cars[i].Cargo.Update(Specs.CurrentAverageAcceleration, TimeElapsed);
 				}
 
 				// safety system
@@ -427,8 +443,6 @@ namespace OpenBve
 						Cars[DriverCar].Sounds.BreakerResumed = false;
 					}
 				}
-				// passengers
-				Passengers.Update(Specs.CurrentAverageAcceleration, TimeElapsed);
 				// signals
 				if (CurrentSectionLimit == 0.0)
 				{

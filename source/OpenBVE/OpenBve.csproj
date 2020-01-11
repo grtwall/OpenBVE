@@ -245,7 +245,7 @@
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Abstract.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Brake.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.cs" />
-    <Compile Include="Simulation\TrainManager\Passengers.cs" />
+    <Compile Include="Simulation\Cargo\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.EmergencyBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.HoldBrake.cs" />

@@ -52,7 +52,9 @@ namespace OpenBve
 			internal bool Topples;
 			/// <summary>The coupler between cars</summary>
 			internal Coupler Coupler;
-			
+			/// <summary>The cargo carried by this car</summary>
+			internal AbstractCargo Cargo;
+
 			internal double BeaconReceiverPosition;
 			internal TrackFollower BeaconReceiver;
 			/// <summary>Whether loading sway is enabled for this car</summary>
@@ -75,12 +77,10 @@ namespace OpenBve
 			{
 				get
 				{
-					return EmptyMass + passengerMass;
+					return EmptyMass + Cargo.Mass;
 				}
 			}
 
-			/// <summary>The mass of the passengers within this car</summary> 
-			private double passengerMass;
 			internal Car(Train train, int index)
 			{
 				baseTrain = train;
@@ -96,6 +96,7 @@ namespace OpenBve
 				Doors[0].MaxTolerance = 0.0;
 				Doors[1].Width = 1000.0;
 				Doors[1].MaxTolerance = 0.0;
+				Cargo = new Passengers(this);
 			}
 
 			/// <summary>Moves the car</summary>
@@ -1457,15 +1458,7 @@ namespace OpenBve
 				}
 			}
 
-			internal void UpdateMass()
-			{
-				double area = Width * Length;
-				const double passengersPerArea = 1.0; //Nominal 1 passenger per meter of interior space
-				double randomFactor = 0.9 + 0.2 * Program.RandomNumberGenerator.NextDouble();
-				double passengers = Math.Round(randomFactor * baseTrain.Passengers.PassengerRatio * passengersPerArea * area);
-				const double massPerPassenger = 70.0; //70kg mass per passenger
-				passengerMass = passengers * massPerPassenger;
-			}
+			
 		}
 	}
 }

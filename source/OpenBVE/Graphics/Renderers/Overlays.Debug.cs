@@ -142,7 +142,7 @@ namespace OpenBve.Graphics.Renderers
 				"air pressure: " + (0.001 * TrainManager.PlayerTrain.Specs.CurrentAirPressure).ToString("0.00", Culture) + " kPa",
 				"air density: " + TrainManager.PlayerTrain.Specs.CurrentAirDensity.ToString("0.0000", Culture) + " kg/m³",
 				"speed of sound: " + (Program.CurrentRoute.Atmosphere.GetSpeedOfSound(TrainManager.PlayerTrain.Specs.CurrentAirDensity) * 3.6).ToString("0.00", Culture) + " km/h",
-				"passenger ratio: " + TrainManager.PlayerTrain.Passengers.PassengerRatio.ToString("0.00"),
+				"passenger ratio: " + TrainManager.PlayerTrain.CargoRatio.ToString("0.00"),
 				"total mass: " + TrainManager.PlayerTrain.Mass.ToString("0.00", Culture) + " kg",
 				"",
 				"=route",
