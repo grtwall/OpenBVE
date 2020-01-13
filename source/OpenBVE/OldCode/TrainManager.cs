@@ -30,15 +30,7 @@ namespace OpenBve
 		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, Train Train)
 		{
 			Train.Cars[Train.DriverCar].CarSections = new CarSection[1];
-			Train.Cars[Train.DriverCar].CarSections[0] = new CarSection
-			{
-				Groups = new ElementsGroup[1]
-			};
-			Train.Cars[Train.DriverCar].CarSections[0].Groups[0] = new ElementsGroup
-			{
-				Elements = new AnimatedObject[] { },
-				Overlay = true
-			};
+			Train.Cars[Train.DriverCar].CarSections[0] = new CarSection();
 			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
 			if (!System.IO.File.Exists(File))
 			{

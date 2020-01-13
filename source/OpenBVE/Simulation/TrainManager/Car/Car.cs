@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Forms;
 using LibRender2.Camera;
 using LibRender2.Cameras;
 using OpenBve.BrakeSystems;
@@ -411,31 +410,7 @@ namespace OpenBve
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
-				CarSections[j] = new CarSection
-				{
-					Groups = new ElementsGroup[1]
-				};
-				CarSections[j].Groups[0] = new ElementsGroup();
-				if (currentObject is StaticObject)
-				{
-					StaticObject s = (StaticObject)currentObject;
-					CarSections[j].Groups[0].Elements = new AnimatedObject[1];
-					CarSections[j].Groups[0].Elements[0] = new AnimatedObject(Program.CurrentHost);
-					CarSections[j].Groups[0].Elements[0].States = new[] { new ObjectState() };
-					CarSections[j].Groups[0].Elements[0].States[0].Prototype = s;
-					CarSections[j].Groups[0].Elements[0].CurrentState = 0;
-					Program.CurrentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
-				}
-				else if (currentObject is AnimatedObjectCollection)
-				{
-					AnimatedObjectCollection a = (AnimatedObjectCollection)currentObject;
-					CarSections[j].Groups[0].Elements = new AnimatedObject[a.Objects.Length];
-					for (int h = 0; h < a.Objects.Length; h++)
-					{
-						CarSections[j].Groups[0].Elements[h] = a.Objects[h].Clone();
-						Program.CurrentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[h].internalObject);
-					}
-				}
+				CarSections[j] = new CarSection(currentObject);
 			}
 
 			/// <summary>Changes the currently visible car section</summary>
