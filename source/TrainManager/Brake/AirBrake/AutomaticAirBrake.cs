@@ -19,7 +19,7 @@ namespace TrainManager.Brake
 		public override void Update(double TimeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double deceleration)
 		{
 			airSound = null;
-			if (emergencyHandle.Actual == true)
+			if (emergencyHandle.Actual)
 			{
 				if (brakeType == BrakeType.Main)
 				{
@@ -31,11 +31,13 @@ namespace TrainManager.Brake
 					{
 						r = equalizingReservoir.CurrentPressure;
 					}
+
 					equalizingReservoir.CurrentPressure -= r;
 				}
 			}
+
 			//First update the main reservoir pressure from the equalizing reservoir
-			AirBrakeHandleState state = (AirBrakeHandleState)brakeHandle.Actual;
+			AirBrakeHandleState state = (AirBrakeHandleState) brakeHandle.Actual;
 			switch (state)
 			{
 				case AirBrakeHandleState.Service:
@@ -83,6 +85,7 @@ namespace TrainManager.Brake
 					break;
 				}
 			}
+
 			//Fill the brake pipe from the main reservoir
 			if (brakeType == BrakeType.Main)
 			{
@@ -113,76 +116,84 @@ namespace TrainManager.Brake
 						r *= mainReservoir.CurrentPressure / s;
 						s = mainReservoir.CurrentPressure;
 					}
+
 					brakePipe.CurrentPressure += 0.5 * r;
 					mainReservoir.CurrentPressure -= 0.5 * s;
 				}
 			}
 
 			if (brakePipe.CurrentPressure + Tolerance < auxiliaryReservoir.CurrentPressure)
+			{
+				if (auxiliaryReservoir.CurrentPressure + Tolerance < brakeCylinder.CurrentPressure)
 				{
-					if (auxiliaryReservoir.CurrentPressure + Tolerance < brakeCylinder.CurrentPressure)
+					// back-flow from brake cylinder to auxillary reservoir
+					double u = (brakeCylinder.CurrentPressure - auxiliaryReservoir.CurrentPressure - Tolerance) / Tolerance;
+					if (u > 1.0) u = 1.0;
+					double f = auxiliaryReservoir.BrakeCylinderCoefficient;
+					double r = brakeCylinder.ServiceChargeRate * f;
+					double d = brakeCylinder.CurrentPressure - auxiliaryReservoir.CurrentPressure;
+					double m = auxiliaryReservoir.MaximumPressure;
+					r = GetRate(d * u / m, r * TimeElapsed);
+					if (auxiliaryReservoir.CurrentPressure + r > m)
 					{
-						// back-flow from brake cylinder to auxillary reservoir
-						double u = (brakeCylinder.CurrentPressure - auxiliaryReservoir.CurrentPressure - Tolerance) / Tolerance;
-						if (u > 1.0) u = 1.0;
-						double f = auxiliaryReservoir.BrakeCylinderCoefficient;
-						double r = brakeCylinder.ServiceChargeRate * f;
-						double d = brakeCylinder.CurrentPressure - auxiliaryReservoir.CurrentPressure;
-						double m = auxiliaryReservoir.MaximumPressure;
-						r = GetRate(d * u / m, r * TimeElapsed);
-						if (auxiliaryReservoir.CurrentPressure + r > m)
-						{
-							r = m - auxiliaryReservoir.CurrentPressure;
-						}
-						if (r > d) r = d;
-						double s = r / f;
-						if (s > d)
-						{
-							r *= d / s;
-							s = d;
-						}
-						if (s > brakeCylinder.CurrentPressure)
-						{
-							r *= brakeCylinder.CurrentPressure / s;
-							s = brakeCylinder.CurrentPressure;
-						}
-						auxiliaryReservoir.CurrentPressure += 0.5 * r;
-						brakeCylinder.CurrentPressure -= 0.5 * s;
+						r = m - auxiliaryReservoir.CurrentPressure;
 					}
-					else if (auxiliaryReservoir.CurrentPressure > brakeCylinder.CurrentPressure + Tolerance)
+
+					if (r > d) r = d;
+					double s = r / f;
+					if (s > d)
 					{
-						// refill brake cylinder from auxillary reservoir
-						double u = (auxiliaryReservoir.CurrentPressure - brakeCylinder.CurrentPressure - Tolerance) / Tolerance;
-						if (u > 1.0) u = 1.0;
-						double f = auxiliaryReservoir.BrakeCylinderCoefficient;
-						double r = brakeCylinder.ServiceChargeRate * f;
-						double d = auxiliaryReservoir.CurrentPressure - brakeCylinder.CurrentPressure;
-						double m = auxiliaryReservoir.MaximumPressure;
-						r = GetRate(d * u / m, r * TimeElapsed);
-						if (r > auxiliaryReservoir.CurrentPressure)
-						{
-							r = auxiliaryReservoir.CurrentPressure;
-						}
-						if (r > d) r = d;
-						double s = r / f;
-						if (s > d)
-						{
-							r *= d / s;
-							s = d;
-						}
-						d = brakeCylinder.EmergencyMaximumPressure - brakeCylinder.CurrentPressure;
-						if (s > d)
-						{
-							r *= d / s;
-							s = d;
-						}
-						auxiliaryReservoir.CurrentPressure -= 0.5 * r;
-						brakeCylinder.CurrentPressure += 0.5 * s;
+						r *= d / s;
+						s = d;
 					}
-					// air sound
-					brakeCylinder.SoundPlayedForPressure = brakeCylinder.EmergencyMaximumPressure;
+
+					if (s > brakeCylinder.CurrentPressure)
+					{
+						r *= brakeCylinder.CurrentPressure / s;
+						s = brakeCylinder.CurrentPressure;
+					}
+
+					auxiliaryReservoir.CurrentPressure += 0.5 * r;
+					brakeCylinder.CurrentPressure -= 0.5 * s;
 				}
-				else if (brakePipe.CurrentPressure > auxiliaryReservoir.CurrentPressure + Tolerance)
+				else if (auxiliaryReservoir.CurrentPressure > brakeCylinder.CurrentPressure + Tolerance)
+				{
+					// refill brake cylinder from auxillary reservoir
+					double u = (auxiliaryReservoir.CurrentPressure - brakeCylinder.CurrentPressure - Tolerance) / Tolerance;
+					if (u > 1.0) u = 1.0;
+					double f = auxiliaryReservoir.BrakeCylinderCoefficient;
+					double r = brakeCylinder.ServiceChargeRate * f;
+					double d = auxiliaryReservoir.CurrentPressure - brakeCylinder.CurrentPressure;
+					double m = auxiliaryReservoir.MaximumPressure;
+					r = GetRate(d * u / m, r * TimeElapsed);
+					if (r > auxiliaryReservoir.CurrentPressure)
+					{
+						r = auxiliaryReservoir.CurrentPressure;
+					}
+
+					if (r > d) r = d;
+					double s = r / f;
+					if (s > d)
+					{
+						r *= d / s;
+						s = d;
+					}
+
+					d = brakeCylinder.EmergencyMaximumPressure - brakeCylinder.CurrentPressure;
+					if (s > d)
+					{
+						r *= d / s;
+						s = d;
+					}
+
+					auxiliaryReservoir.CurrentPressure -= 0.5 * r;
+					brakeCylinder.CurrentPressure += 0.5 * s;
+				}
+
+				// air sound
+				brakeCylinder.SoundPlayedForPressure = brakeCylinder.EmergencyMaximumPressure;
+			}
+			else if (brakePipe.CurrentPressure > auxiliaryReservoir.CurrentPressure + Tolerance)
 			{
 				double u = (brakePipe.CurrentPressure - auxiliaryReservoir.CurrentPressure - Tolerance) / Tolerance;
 				if (u > 1.0) u = 1.0;
@@ -240,6 +251,7 @@ namespace TrainManager.Brake
 				// air sound
 				brakeCylinder.SoundPlayedForPressure = brakeCylinder.EmergencyMaximumPressure;
 			}
+
 			double pressureratio = brakeCylinder.CurrentPressure / brakeCylinder.ServiceMaximumPressure;
 			deceleration = pressureratio * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
 		}

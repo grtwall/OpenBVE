@@ -69,8 +69,8 @@ namespace OpenBve
 				}
 				else
 				{
-					numericUpDownBrakeNotch.Value = TrainManager.Trains[0].Specs.CurrentBrakeNotch.Driver;
-					numericUpDownBrakeNotches.Value = TrainManager.Trains[0].Specs.MaximumBrakeNotch;
+					numericUpDownBrakeNotch.Value = TrainManager.Trains[0].Specs.BrakeHandle.Driver;
+					numericUpDownBrakeNotches.Value = TrainManager.Trains[0].Specs.BrakeHandle.MaximumNotch;
 					checkBoxHoldBrake.Checked = TrainManager.Trains[0].Specs.HasHoldBrake;
 					if (checkBoxHoldBrake.Checked)
 					{
@@ -327,8 +327,8 @@ namespace OpenBve
 					}
 					else
 					{
-						TrainManager.Trains[0].Specs.CurrentBrakeNotch.Driver = (int)numericUpDownBrakeNotch.Value;
-						TrainManager.Trains[0].Specs.MaximumBrakeNotch = (int)numericUpDownBrakeNotches.Value;
+						TrainManager.Trains[0].Specs.BrakeHandle.Driver = (int)numericUpDownBrakeNotch.Value;
+						TrainManager.Trains[0].Specs.BrakeHandle.MaximumNotch = (int)numericUpDownBrakeNotches.Value;
 						TrainManager.Trains[0].Specs.HasHoldBrake = checkBoxHoldBrake.Checked;
 						if (checkBoxHoldBrake.Checked)
 						{

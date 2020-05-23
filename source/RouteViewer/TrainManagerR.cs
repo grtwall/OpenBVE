@@ -6,11 +6,11 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SoundManager;
 using TrainManager.Brake;
 using TrainManager.Handles;
+using TrainManager.Motor;
 
 namespace OpenBve {
 	using System;
@@ -25,57 +25,7 @@ namespace OpenBve {
 			internal int Direction;
 			internal double State;
 		}
-		internal struct AccelerationCurve {
-			internal double StageZeroAcceleration;
-			internal double StageOneSpeed;
-			internal double StageOneAcceleration;
-			internal double StageTwoSpeed;
-			internal double StageTwoExponent;
-		}
-
-		internal struct AirBrakeHandle {
-			internal AirBrakeHandleState Driver;
-			internal AirBrakeHandleState Security;
-			internal AirBrakeHandleState Actual;
-			internal AirBrakeHandleState DelayedValue;
-			internal double DelayedTime;
-		}
-		internal struct CarAirBrake {
-			internal BrakeType Type;
-			internal bool AirCompressorEnabled;
-			internal double AirCompressorMinimumPressure;
-			internal double AirCompressorMaximumPressure;
-			internal double AirCompressorRate;
-			internal double MainReservoirCurrentPressure;
-			internal double MainReservoirEqualizingReservoirCoefficient;
-			internal double MainReservoirBrakePipeCoefficient;
-			internal double EqualizingReservoirCurrentPressure;
-			internal double EqualizingReservoirNormalPressure;
-			internal double EqualizingReservoirServiceRate;
-			internal double EqualizingReservoirEmergencyRate;
-			internal double EqualizingReservoirChargeRate;
-			internal double BrakePipeCurrentPressure;
-			internal double BrakePipeNormalPressure;
-			internal double BrakePipeChargeRate;
-			internal double BrakePipeServiceRate;
-			internal double BrakePipeEmergencyRate;
-			internal double AuxillaryReservoirCurrentPressure;
-			internal double AuxillaryReservoirMaximumPressure;
-			internal double AuxillaryReservoirChargeRate;
-			internal double AuxillaryReservoirBrakePipeCoefficient;
-			internal double AuxillaryReservoirBrakeCylinderCoefficient;
-			internal double BrakeCylinderCurrentPressure;
-			internal double BrakeCylinderEmergencyMaximumPressure;
-			internal double BrakeCylinderServiceMaximumPressure;
-			internal double BrakeCylinderEmergencyChargeRate;
-			internal double BrakeCylinderServiceChargeRate;
-			internal double BrakeCylinderReleaseRate;
-			internal double BrakeCylinderSoundPlayedForPressure;
-			internal double StraightAirPipeCurrentPressure;
-			internal double StraightAirPipeReleaseRate;
-			internal double StraightAirPipeServiceRate;
-			internal double StraightAirPipeEmergencyRate;
-		}
+		
 		internal struct CarHoldBrake {
 			internal double CurrentAccelerationOutput;
 			internal double NextUpdateTime;
@@ -106,7 +56,7 @@ namespace OpenBve {
 			internal CarConstSpeed ConstSpeed;
 			internal BrakeSystemType BrakeType;
 			internal EletropneumaticBrakeType ElectropneumaticType;
-			internal CarAirBrake AirBrake;
+			internal CarBrake AirBrake;
 			internal Door[] Doors;
 			internal double DoorOpenSpeed;
 			internal double DoorCloseSpeed;
@@ -207,6 +157,8 @@ namespace OpenBve {
 			{
 				FrontAxle = new Axle(Program.CurrentHost, train, this);
 				RearAxle = new Axle(Program.CurrentHost, train, this);
+				//Not actually used at the minute, but initialise
+				Specs.AirBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, train.Specs.CurrentEmergencyBrake, train.Specs.CurrentReverser, true, 0.0, 0.0, new AccelerationCurve[] {});
 			}
 
 			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
@@ -245,12 +197,7 @@ namespace OpenBve {
 			internal int Actual;
 			internal HandleChange[] DelayedChanges;
 		}
-		internal struct BrakeHandle {
-			internal int Driver;
-			internal int Security;
-			internal int Actual;
-			internal HandleChange[] DelayedChanges;
-		}
+		
 		// train security
 		internal enum SafetyState {
 			Normal = 0,
@@ -302,8 +249,7 @@ namespace OpenBve {
 			internal ReverserHandle CurrentReverser;
 			internal int MaximumPowerNotch;
 			internal PowerHandle CurrentPowerNotch;
-			internal int MaximumBrakeNotch;
-			internal BrakeHandle CurrentBrakeNotch;
+			internal AbstractHandle BrakeHandle;
 			internal EmergencyHandle CurrentEmergencyBrake;
 			internal bool HasHoldBrake;
 			internal HoldBrakeHandle CurrentHoldBrake;
@@ -320,6 +266,7 @@ namespace OpenBve {
 			{
 				Specs.CurrentReverser = new ReverserHandle();
 				Specs.CurrentEmergencyBrake = new EmergencyHandle();
+				Specs.BrakeHandle = new BrakeHandle(8,8, Specs.CurrentEmergencyBrake, new double[] {}, new double[] {});
 			}
 
 			public override int NumberOfCars

@@ -6,7 +6,7 @@ namespace TrainManager.Brake
 {
 	public abstract class CarBrake
 	{
-		public const double Tolerance = 5000.0;
+		internal const double Tolerance = 5000.0;
 
 		/// <summary>Contains a reference to the EB handle of the controlling train</summary>
 		public EmergencyHandle emergencyHandle;
@@ -75,6 +75,10 @@ namespace TrainManager.Brake
 		/// <returns>The deceleration in m/s</returns>
 		public double DecelerationAtServiceMaximumPressure(int Notch, double currentSpeed)
 		{
+			if (decelerationCurves.Length == 0)
+			{
+				return 0;
+			}
 			if (Notch == 0)
 			{
 				return this.decelerationCurves[0].GetAccelerationOutput(currentSpeed, 1.0);

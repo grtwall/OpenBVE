@@ -129,12 +129,7 @@ namespace OpenBve {
 			internal int Actual;
 			internal HandleChange[] DelayedChanges;
 		}
-		internal struct BrakeHandle {
-			internal int Driver;
-			internal int Safety;
-			internal int Actual;
-			internal HandleChange[] DelayedChanges;
-		}
+
 		// train security
 		internal enum SafetyState {
 			Normal = 0,
@@ -208,8 +203,7 @@ namespace OpenBve {
 			internal int PowerNotchReduceSteps;
 			internal int MaximumPowerNotch;
 			internal PowerHandle CurrentPowerNotch;
-			internal int MaximumBrakeNotch;
-			internal BrakeHandle CurrentBrakeNotch;
+			internal AbstractHandle BrakeHandle;
 			internal EmergencyHandle CurrentEmergencyBrake;
 			internal bool HasHoldBrake;
 			internal HoldBrakeHandle CurrentHoldBrake;
@@ -234,6 +228,8 @@ namespace OpenBve {
 			{
 				Specs.CurrentReverser = new ReverserHandle();
 				Specs.CurrentEmergencyBrake = new EmergencyHandle();
+				//Init with the default 8 notch brake handle
+				Specs.BrakeHandle = new BrakeHandle(8,8, Specs.CurrentEmergencyBrake, new double[] {}, new double[] {});
 			}
 
 			public override double FrontCarTrackPosition()
