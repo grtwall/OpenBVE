@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenBveApi.Trains;
+using TrainManager.Brake;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
@@ -53,10 +55,10 @@ namespace OpenBve
 				checkBoxLeftTarget.Checked = TrainManager.Trains[0].Cars[0].Specs.AnticipatedLeftDoorsOpened;
 				checkBoxRightTarget.Checked = TrainManager.Trains[0].Cars[0].Specs.AnticipatedRightDoorsOpened;
 
-				numericUpDownReverser.Value = TrainManager.Trains[0].Specs.CurrentReverser.Driver;
+				numericUpDownReverser.Value = (int)TrainManager.Trains[0].Specs.CurrentReverser.Driver;
 				numericUpDownPowerNotch.Value = TrainManager.Trains[0].Specs.CurrentPowerNotch.Driver;
 				numericUpDownPowerNotches.Value = TrainManager.Trains[0].Specs.MaximumPowerNotch;
-				checkBoxAirBrake.Checked = TrainManager.Trains[0].Cars[0].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake;
+				checkBoxAirBrake.Checked = TrainManager.Trains[0].Cars[0].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake;
 				if (checkBoxAirBrake.Checked)
 				{
 					numericUpDownBrakeNotch.Value = (int)TrainManager.Trains[0].Specs.AirBrake.Handle.Driver;
@@ -314,14 +316,14 @@ namespace OpenBve
 						TrainManager.Trains[0].Cars[i].Specs.AnticipatedRightDoorsOpened = checkBoxRightTarget.Checked;
 					}
 
-					TrainManager.Trains[0].Specs.CurrentReverser.Driver = (int)numericUpDownReverser.Value;
-					TrainManager.Trains[0].Specs.CurrentReverser.Actual = (int)numericUpDownReverser.Value;
+					TrainManager.Trains[0].Specs.CurrentReverser.Driver = (ReverserPosition)numericUpDownReverser.Value;
+					TrainManager.Trains[0].Specs.CurrentReverser.Actual = (ReverserPosition)numericUpDownReverser.Value;
 					TrainManager.Trains[0].Specs.CurrentPowerNotch.Driver = (int)numericUpDownPowerNotch.Value;
 					TrainManager.Trains[0].Specs.MaximumPowerNotch = (int)numericUpDownPowerNotches.Value;
 					if (checkBoxAirBrake.Checked)
 					{
-						TrainManager.Trains[0].Cars[0].Specs.BrakeType = TrainManager.CarBrakeType.AutomaticAirBrake;
-						TrainManager.Trains[0].Specs.AirBrake.Handle.Driver = (TrainManager.AirBrakeHandleState)numericUpDownBrakeNotch.Value;
+						TrainManager.Trains[0].Cars[0].Specs.BrakeType = BrakeSystemType.AutomaticAirBrake;
+						TrainManager.Trains[0].Specs.AirBrake.Handle.Driver = (AirBrakeHandleState)numericUpDownBrakeNotch.Value;
 					}
 					else
 					{

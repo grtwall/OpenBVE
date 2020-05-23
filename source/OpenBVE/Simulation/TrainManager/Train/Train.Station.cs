@@ -3,6 +3,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
+using TrainManager.Handles;
 
 namespace OpenBve
 {

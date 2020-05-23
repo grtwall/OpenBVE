@@ -141,6 +141,10 @@
       <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
       <Name>RouteManager2</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TrainManager\TrainManager.csproj">
+      <Project>{65ca4be2-5a47-4a2c-b9dd-2c36ddfa2c46}</Project>
+      <Name>TrainManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -1,6 +1,7 @@
 ﻿using System;
-using OpenBve.BrakeSystems;
 using SoundManager;
+using TrainManager.Brake;
+using TrainManager.Handles;
 
 namespace OpenBve
 {

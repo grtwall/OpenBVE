@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Xml;
-using OpenBve.BrakeSystems;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
+using TrainManager.Brake;
 
 namespace OpenBve
 {

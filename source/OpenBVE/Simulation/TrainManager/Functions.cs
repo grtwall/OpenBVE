@@ -2,6 +2,7 @@
 using LibRender2.Screens;
 using OpenBveApi.Trains;
 using SoundManager;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
@@ -106,7 +107,7 @@ namespace OpenBve
 				else
 				{
 					train.ApplyNotch(0, false, train.Handles.Brake.MaximumNotch, false);
-					train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+					train.ApplyAirBrakeHandle(AirBrakeHandleState.Service);
 				}
 				if (Program.CurrentRoute.Sections.Length > 0)
 				{

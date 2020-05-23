@@ -2,6 +2,7 @@
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
+using TrainManager.Brake;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
@@ -730,7 +731,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.BrakeNotch:
 						if (Train != null) {
-							if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+							if (Train.Cars[Train.DriverCar].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake) {
 								Function.Stack[s] = (double)Train.Specs.AirBrake.Handle.Driver;
 							} else {
 								Function.Stack[s] = (double)Train.Specs.CurrentBrakeNotch.Driver;
@@ -741,7 +742,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.BrakeNotches:
 						if (Train != null) {
-							if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+							if (Train.Cars[Train.DriverCar].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake) {
 								Function.Stack[s] = 2.0;
 							} else {
 								Function.Stack[s] = (double)Train.Specs.MaximumBrakeNotch;
@@ -752,7 +753,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.BrakeNotchLinear:
 						if (Train != null) {
-							if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+							if (Train.Cars[Train.DriverCar].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake) {
 								if (Train.Specs.CurrentEmergencyBrake.Driver) {
 									Function.Stack[s] = 3.0;
 								} else {
@@ -779,7 +780,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.BrakeNotchesLinear:
 						if (Train != null) {
-							if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+							if (Train.Cars[Train.DriverCar].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake) {
 								Function.Stack[s] = 3.0;
 							} else if (Train.Specs.HasHoldBrake) {
 								Function.Stack[s] = Train.Specs.MaximumBrakeNotch + 2.0;
@@ -803,7 +804,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.HasAirBrake:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake ? 1.0 : 0.0;
+							Function.Stack[s] = Train.Cars[Train.DriverCar].Specs.BrakeType == BrakeSystemType.AutomaticAirBrake ? 1.0 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
 						}

@@ -7,6 +7,8 @@
 
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
+using TrainManager.Brake;
+using TrainManager.Handles;
 
 namespace OpenBve {
 	internal static class TrainManager {
@@ -19,23 +21,7 @@ namespace OpenBve {
 			internal int Direction;
 			internal double State;
 		}
-		
-		internal enum CarBrakeType {
-			ElectromagneticStraightAirBrake = 0, //電磁直通
-			ElectricCommandBrake = 1, //電気指令式
-			AutomaticAirBrake = 2 //自動空気
-		}
-		internal enum EletropneumaticBrakeType {
-			None = 0,
-			ClosingElectromagneticValve = 1, //締切電磁弁
-			DelayFillingControl = 2 //遅れ込め制御
-		}
-		internal enum AirBrakeHandleState {
-			Invalid = -1,
-			Release = 0,
-			Lap = 1,
-			Service = 2,
-		}
+
 		internal struct AirBrakeHandle {
 			internal AirBrakeHandleState Driver;
 			internal AirBrakeHandleState Safety;
@@ -43,9 +29,8 @@ namespace OpenBve {
 			internal AirBrakeHandleState DelayedValue;
 			internal double DelayedTime;
 		}
-		internal enum AirBrakeType { Main, Auxillary }
 		internal struct CarAirBrake {
-			internal AirBrakeType Type;
+			internal BrakeSystemType Type;
 			internal bool AirCompressorEnabled;
 			internal double AirCompressorMinimumPressure;
 			internal double AirCompressorMaximumPressure;
@@ -107,7 +92,7 @@ namespace OpenBve {
 			internal bool CurrentMotorBrake;
 			internal CarHoldBrake HoldBrake;
 			internal CarConstSpeed ConstSpeed;
-			internal CarBrakeType BrakeType;
+			internal BrakeSystemType BrakeType;
 			internal EletropneumaticBrakeType ElectropneumaticType;
 			internal CarAirBrake AirBrake;
 			internal Door[] Doors;
@@ -138,11 +123,6 @@ namespace OpenBve {
 			}
 		}
 
-		// train
-		internal struct HandleChange {
-			internal int Value;
-			internal double Time;
-		}
 		internal struct PowerHandle {
 			internal int Driver;
 			internal int Safety;
@@ -154,20 +134,6 @@ namespace OpenBve {
 			internal int Safety;
 			internal int Actual;
 			internal HandleChange[] DelayedChanges;
-		}
-		internal struct EmergencyHandle {
-			internal bool Driver;
-			internal bool Safety;
-			internal bool Actual;
-			internal double ApplicationTime;
-		}
-		internal struct ReverserHandle {
-			internal int Driver;
-			internal int Actual;
-		}
-		internal struct HoldBrakeHandle {
-			internal bool Driver;
-			internal bool Actual;
 		}
 		// train security
 		internal enum SafetyState {
@@ -263,6 +229,13 @@ namespace OpenBve {
 		internal class Train : AbstractTrain {
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
+
+			internal Train()
+			{
+				Specs.CurrentReverser = new ReverserHandle();
+				Specs.CurrentEmergencyBrake = new EmergencyHandle();
+			}
+
 			public override double FrontCarTrackPosition()
 			{
 				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;

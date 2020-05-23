@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using LibRender2.Trains;
-using OpenBve.BrakeSystems;
 using OpenBve.Parsers.Panel;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
@@ -17,6 +16,8 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using RouteManager2.MessageManager;
 using SoundManager;
+using TrainManager.Brake;
+using TrainManager.Handles;
 
 namespace OpenBve
 {
@@ -533,10 +534,10 @@ namespace OpenBve
 					Handles.Brake.Safety = Handles.Brake.Driver;
 					Handles.EmergencyBrake.Safety = Handles.EmergencyBrake.Driver;
 				}
-				Handles.Power.Update();
-				Handles.Brake.Update();
-				Handles.Brake.Update();
-				Handles.EmergencyBrake.Update();
+				Handles.Power.Update(Program.CurrentRoute.SecondsSinceMidnight);
+				Handles.Brake.Update(Program.CurrentRoute.SecondsSinceMidnight);
+				Handles.Brake.Update(Program.CurrentRoute.SecondsSinceMidnight);
+				Handles.EmergencyBrake.Update(Program.CurrentRoute.SecondsSinceMidnight);
 				Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
 				// update speeds
 				UpdateSpeeds(TimeElapsed);

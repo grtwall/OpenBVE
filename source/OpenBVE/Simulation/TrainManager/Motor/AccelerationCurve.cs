@@ -1,20 +1,11 @@
 ﻿using System;
+using TrainManager.Motor;
 
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
 	public static partial class TrainManager
 	{
-		/// <summary>An abstract acceleration curve</summary>
-		internal abstract class AccelerationCurve
-		{
-			/// <summary>Gets the acceleration output for this curve</summary>
-			/// <param name="Speed">The current speed</param>
-			/// <param name="Loading">A double between 0 (Unloaded) and 1.0 (Loaded) representing the load factor</param>
-			/// <returns>The acceleration output</returns>
-			internal abstract double GetAccelerationOutput(double Speed, double Loading);
-		}
-
 		/// <summary>Represents a BVE2 / BVE4 format Acceleration Curve</summary>
 		internal class BveAccelerationCurve : AccelerationCurve
 		{
@@ -25,7 +16,7 @@ namespace OpenBve
 			internal double StageTwoExponent;
 			internal double Multiplier;
 
-			internal override double GetAccelerationOutput(double Speed, double Loading)
+			public override double GetAccelerationOutput(double Speed, double Loading)
 			{
 				if (Speed <= 0.0)
 				{
@@ -60,7 +51,7 @@ namespace OpenBve
 		internal class BveDecelerationCurve : AccelerationCurve
 		{
 			private readonly double MaxDecelerationOutput;
-			internal override double GetAccelerationOutput(double Speed, double Loading)
+			public override double GetAccelerationOutput(double Speed, double Loading)
 			{
 				return this.MaxDecelerationOutput;
 			}

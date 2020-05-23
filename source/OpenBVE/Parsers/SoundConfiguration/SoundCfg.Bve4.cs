@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OpenBve.BrakeSystems;
 using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using SoundManager;
+using TrainManager.Brake;
 
 namespace OpenBve
 {

@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{65CA4BE2-5A47-4A2C-B9DD-2C36DDFA2C46}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TrainManager</RootNamespace>
+    <AssemblyName>TrainManager</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin_debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin_release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Brake\AirBrake\AutomaticAirBrake.cs" />
+    <Compile Include="Brake\AirBrake\Components\AirCompressor.cs" />
+    <Compile Include="Brake\AirBrake\Components\BrakeCylinder.cs" />
+    <Compile Include="Brake\AirBrake\Components\BrakePipe.cs" />
+    <Compile Include="Brake\AirBrake\Components\Reservoirs.cs" />
+    <Compile Include="Brake\AirBrake\Components\StraightAirPipe.cs" />
+    <Compile Include="Brake\AirBrake\ElectricCommandBrake.cs" />
+    <Compile Include="Brake\AirBrake\ElectromagneticStraightAirBrake.cs" />
+    <Compile Include="Brake\BrakeSystemType.cs" />
+    <Compile Include="Brake\CarBrake.BrakeType.cs" />
+    <Compile Include="Brake\CarBrake.cs" />
+    <Compile Include="Brake\ElectroPneumaticBrakeType.cs" />
+    <Compile Include="Handles\AbstractHandle.cs" />
+    <Compile Include="Handles\AbstractHandle.Notched.cs" />
+    <Compile Include="Handles\Brake\Loco.AirBrake.cs" />
+    <Compile Include="Handles\Brake\Loco.NotchedBrake.cs" />
+    <Compile Include="Handles\Brake\LocoBrake.Types.cs" />
+    <Compile Include="Handles\HandleChange.cs" />
+    <Compile Include="Handles\Brake\AirBrake.cs" />
+    <Compile Include="Handles\Brake\AirBrake.State.cs" />
+    <Compile Include="Handles\Brake\NotchedBrake.cs" />
+    <Compile Include="Handles\Brake\Emergency.Behaviour.cs" />
+    <Compile Include="Handles\Brake\Emergency.cs" />
+    <Compile Include="Handles\Other\HoldBrake.cs" />
+    <Compile Include="Handles\Other\Reverser.cs" />
+    <Compile Include="Handles\Other\Reverser.Positions.cs" />
+    <Compile Include="Handles\Power\NotchedPower.cs" />
+    <Compile Include="Motor\Acceleration\AccelerationCurve.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
+      <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
+      <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoundManager\SoundManager.csproj">
+      <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>
+      <Name>SoundManager</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
