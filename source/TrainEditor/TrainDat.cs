@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using OpenBveApi.Runtime;
+using TrainManager.Doors;
+using TrainManager.Systems;
 
 namespace TrainEditor {
 	internal static class TrainDat {
@@ -87,11 +90,6 @@ namespace TrainEditor {
 		// brake
 		/// <summary>The Brake section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Brake {
-			internal enum BrakeTypes {
-				ElectromagneticStraightAirBrake = 0,
-				ElectricCommandBrake = 1,
-				AutomaticAirBrake = 2
-			}
 			internal enum LocoBrakeTypes {
 				NotFitted = 0,
 				NotchedAirBrake = 1,
@@ -232,33 +230,16 @@ namespace TrainEditor {
 				Manual = 1,
 				Automatic = 2
 			}
-			internal enum ReAdhesionDevices {
-				None = -1,
-				TypeA = 0,
-				TypeB = 1,
-				TypeC = 2,
-				TypeD = 3
-			}
-			internal enum PassAlarmModes {
-				None = 0,
-				Single = 1,
-				Looping = 2
-			}
-			internal enum DoorModes {
-				SemiAutomatic = 0,
-				Automatic = 1,
-				Manual = 2
-			}
 			internal AtsModes Ats;
 			internal AtcModes Atc;
 			internal bool Eb;
 			internal bool ConstSpeed;
 			internal bool HoldBrake;
-			internal ReAdhesionDevices ReAdhesionDevice;
+			internal ReadhesionDeviceType ReAdhesionDevice;
 			internal double LoadCompensatingDevice;
-			internal PassAlarmModes PassAlarm;
-			internal DoorModes DoorOpenMode;
-			internal DoorModes DoorCloseMode;
+			internal PassAlarmType PassAlarm;
+			internal DoorMode DoorOpenMode;
+			internal DoorMode DoorCloseMode;
 			internal double DoorWidth;
 			internal double DoorMaxTolerance;
 			internal Device() {
@@ -267,11 +248,11 @@ namespace TrainEditor {
 				this.Eb = false;
 				this.ConstSpeed = false;
 				this.HoldBrake = false;
-				this.ReAdhesionDevice = ReAdhesionDevices.TypeA;
+				this.ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 				this.LoadCompensatingDevice = 0.0;
-				this.PassAlarm = PassAlarmModes.None;
-				this.DoorOpenMode = DoorModes.SemiAutomatic;
-				this.DoorCloseMode = DoorModes.SemiAutomatic;
+				this.PassAlarm = PassAlarmType.None;
+				this.DoorOpenMode = DoorMode.AutomaticManualOverride;
+				this.DoorCloseMode = DoorMode.AutomaticManualOverride;
 				this.DoorWidth = 1000.0;
 				this.DoorMaxTolerance = 0.0;
 			}
@@ -544,7 +525,7 @@ namespace TrainEditor {
 								int b = (int)Math.Round(a);
 								switch (n) {
 									case 0:
-										if (b >= 0 & b <= 2) t.Brake.BrakeType = (Brake.BrakeTypes)b;
+										if (b >= 0 & b <= 2) t.Brake.BrakeType = (BrakeTypes)b;
 										break;
 									case 1:
 										if (b >= 0 & b <= 2) t.Brake.BrakeControlSystem = (Brake.BrakeControlSystems)b;
@@ -697,19 +678,19 @@ namespace TrainEditor {
 										t.Device.HoldBrake = a == 1.0;
 										break;
 									case 5:
-										if (b >= -1 & b <= 3) t.Device.ReAdhesionDevice = (Device.ReAdhesionDevices)b;
+										if (b >= -1 & b <= 3) t.Device.ReAdhesionDevice = (ReadhesionDeviceType)b;
 										break;
 									case 6:
 										t.Device.LoadCompensatingDevice = a;
 										break;
 									case 7:
-										if (b >= 0 & b <= 2) t.Device.PassAlarm = (Device.PassAlarmModes)b;
+										if (b >= 0 & b <= 2) t.Device.PassAlarm = (PassAlarmType)b;
 										break;
 									case 8:
-										if (b >= 0 & b <= 2) t.Device.DoorOpenMode = (Device.DoorModes)b;
+										if (b >= 0 & b <= 2) t.Device.DoorOpenMode = (DoorMode)b;
 										break;
 									case 9:
-										if (b >= 0 & b <= 2) t.Device.DoorCloseMode = (Device.DoorModes)b;
+										if (b >= 0 & b <= 2) t.Device.DoorCloseMode = (DoorMode)b;
 										break;
 									case 10:
 										if (a >= 0.0) t.Device.DoorWidth = a;
@@ -797,7 +778,7 @@ namespace TrainEditor {
 				}
 			}
 			if (t.Pressure.BrakePipeNormalPressure <= 0.0) {
-				if (t.Brake.BrakeType == Brake.BrakeTypes.AutomaticAirBrake) {
+				if (t.Brake.BrakeType == BrakeTypes.AutomaticAirBrake) {
 					t.Pressure.BrakePipeNormalPressure = t.Pressure.BrakeCylinderEmergencyMaximumPressure + 0.75 * (t.Pressure.MainReservoirMinimumPressure - t.Pressure.BrakeCylinderEmergencyMaximumPressure);
 					if (t.Pressure.BrakePipeNormalPressure > t.Pressure.MainReservoirMinimumPressure) {
 						t.Pressure.BrakePipeNormalPressure = t.Pressure.MainReservoirMinimumPressure;
@@ -810,7 +791,7 @@ namespace TrainEditor {
 					}
 				}
 			}
-			if (t.Brake.BrakeType == Brake.BrakeTypes.AutomaticAirBrake) {
+			if (t.Brake.BrakeType == BrakeTypes.AutomaticAirBrake) {
 				t.Device.HoldBrake = false;
 			}
 			if (t.Device.HoldBrake & t.Handle.BrakeNotches <= 0) {

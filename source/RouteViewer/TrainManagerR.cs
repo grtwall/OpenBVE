@@ -231,11 +231,6 @@ namespace OpenBve {
 		}
 		
 		// train specs
-		internal enum PassAlarmType {
-			None = 0,
-			Single = 1,
-			Loop = 2
-		}
 		internal struct TrainAirBrake {
 			internal AirBrakeHandle Handle;
 		}

@@ -17,6 +17,7 @@ using OpenBveApi.Objects;
 using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Brake;
+using TrainManager.Doors;
 using TrainManager.Handles;
 
 namespace OpenBve

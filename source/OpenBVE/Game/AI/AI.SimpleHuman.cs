@@ -2,6 +2,7 @@
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.Events;
+using TrainManager.Doors;
 using TrainManager.Handles;
 
 namespace OpenBve
@@ -189,7 +190,7 @@ namespace OpenBve
 						if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (Program.CurrentRoute.Stations[Train.Station].StopsHere(Train) & (Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors | Program.CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
 						{
 							// doors not fully open at station - open doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+							if (Train.Specs.DoorOpenMode != DoorMode.Automatic)
 							{
 								TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
 							}
@@ -240,7 +241,7 @@ namespace OpenBve
 						if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed)
 						{
 							// ready for departure - close doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+							if (Train.Specs.DoorOpenMode != DoorMode.Automatic)
 							{
 								TrainManager.CloseTrainDoors(Train, true, true);
 							}
@@ -251,7 +252,7 @@ namespace OpenBve
 						else if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (Program.CurrentRoute.Stations[Train.Station].StopsHere(Train) & (Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors | Program.CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
 						{
 							// doors not fully open at station - open doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+							if (Train.Specs.DoorOpenMode != DoorMode.Automatic)
 							{
 								TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
 							}
@@ -260,7 +261,7 @@ namespace OpenBve
 						else
 						{
 							// not at station - close doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+							if (Train.Specs.DoorOpenMode != DoorMode.Automatic)
 							{
 								TrainManager.CloseTrainDoors(Train, true, true);
 							}
@@ -270,7 +271,7 @@ namespace OpenBve
 				else if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (Program.CurrentRoute.Stations[Train.Station].StopsHere(Train) & (Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors | Program.CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
 				{
 					// arrived at station - open doors
-					if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+					if (Train.Specs.DoorOpenMode != DoorMode.Automatic)
 					{
 						TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
 					}

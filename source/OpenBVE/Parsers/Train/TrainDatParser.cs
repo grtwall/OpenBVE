@@ -9,8 +9,10 @@ using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using TrainManager.Brake;
+using TrainManager.Doors;
 using TrainManager.Handles;
 using TrainManager.Motor;
+using TrainManager.Systems;
 
 namespace OpenBve {
 	internal static partial class TrainDatParser {
@@ -149,7 +151,7 @@ namespace OpenBve {
 			bool FrontCarIsMotorCar = true;
 			double DoorWidth = 1000.0;
 			double DoorTolerance = 0.0;
-			TrainManager.ReadhesionDeviceType ReAdhesionDevice = TrainManager.ReadhesionDeviceType.TypeA;
+			ReadhesionDeviceType ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 			PassAlarmType passAlarm = PassAlarmType.None;
 			Train.Handles.EmergencyBrake = new EmergencyHandle();
 			Train.Handles.HasLocoBrake = false;
@@ -710,11 +712,11 @@ namespace OpenBve {
 										int dt = (int) Math.Round(a);
 										if (dt < 4 && dt > -1)
 										{
-											ReAdhesionDevice = (TrainManager.ReadhesionDeviceType)dt;
+											ReAdhesionDevice = (ReadhesionDeviceType)dt;
 										}
 										else
 										{
-											ReAdhesionDevice = TrainManager.ReadhesionDeviceType.NotFitted;
+											ReAdhesionDevice = ReadhesionDeviceType.NotFitted;
 											Interface.AddMessage(MessageType.Error, false, "ReAdhesionDeviceType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;
@@ -731,7 +733,7 @@ namespace OpenBve {
 										{
 											int b = (int)Math.Round(a);
 											if (b >= 0 & b <= 2) {
-												Train.Specs.DoorOpenMode = (TrainManager.DoorMode)b;
+												Train.Specs.DoorOpenMode = (DoorMode)b;
 											} else {
 												Interface.AddMessage(MessageType.Error, false, "DoorOpenMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
@@ -740,7 +742,7 @@ namespace OpenBve {
 										{
 											int b = (int)Math.Round(a);
 											if (b >= 0 & b <= 2) {
-												Train.Specs.DoorCloseMode = (TrainManager.DoorMode)b;
+												Train.Specs.DoorCloseMode = (DoorMode)b;
 											} else {
 												Interface.AddMessage(MessageType.Error, false, "DoorCloseMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;

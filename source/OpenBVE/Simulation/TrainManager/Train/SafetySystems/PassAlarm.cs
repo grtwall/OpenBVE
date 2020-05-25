@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Trains;
 using SoundManager;
+using TrainManager.Systems;
 
 namespace OpenBve.SafetySystems
 {
@@ -53,14 +54,5 @@ namespace OpenBve.SafetySystems
 			}
 		}
 	}
-	/// <summary>Defines the differing types of station pass alarm a train may be fitted with</summary>
-	internal enum PassAlarmType
-	{
-		/// <summary>No pass alarm</summary>
-		None = 0,
-		/// <summary>The alarm sounds once</summary>
-		Single = 1,
-		/// <summary>The alarm loops until cancelled</summary>
-		Loop = 2
-	}
+	
 }

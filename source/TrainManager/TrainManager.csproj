@@ -67,6 +67,8 @@
     <Compile Include="Handles\Power\NotchedPower.cs" />
     <Compile Include="Motor\Acceleration\AccelerationCurve.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Systems\PassAlarm\PassAlarm.Types.cs" />
+    <Compile Include="Systems\ReadhesionDevice\ReadhesionDevice.Types.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

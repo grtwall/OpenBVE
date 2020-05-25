@@ -5,11 +5,11 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using TrainManager.Brake;
 using TrainManager.Doors;
 using TrainManager.Handles;
+using TrainManager.Systems;
 
 namespace OpenBve {
 	internal static class TrainManager {
@@ -177,11 +177,6 @@ namespace OpenBve {
 			internal Eb Eb;
 		}
 		// train specs
-		internal enum PassAlarmType {
-			None = 0,
-			Single = 1,
-			Loop = 2
-		}
 		internal struct TrainAirBrake {
 			internal AirBrakeHandle Handle;
 		}

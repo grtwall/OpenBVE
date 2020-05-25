@@ -211,7 +211,6 @@
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\SafetySystems\PilotLamp.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
-    <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.Types.cs" />
     <Compile Include="Simulation\TrainManager\Doors.DoorMode.cs" />
     <Compile Include="Simulation\TrainManager\DriverBody.cs" />
     <Compile Include="Simulation\TrainManager\Motor\AccelerationCurve.cs" />
