@@ -8,6 +8,7 @@
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using TrainManager.Brake;
+using TrainManager.Doors;
 using TrainManager.Handles;
 
 namespace OpenBve {
@@ -15,13 +16,6 @@ namespace OpenBve {
 
 // Silence the absurd amount of unused variable warnings
 #pragma warning disable 0649
-
-		// cars
-		internal struct Door {
-			internal int Direction;
-			internal double State;
-		}
-
 		internal struct AirBrakeHandle {
 			internal AirBrakeHandleState Driver;
 			internal AirBrakeHandleState Safety;

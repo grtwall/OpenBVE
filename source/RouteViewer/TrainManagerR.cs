@@ -9,6 +9,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using SoundManager;
 using TrainManager.Brake;
+using TrainManager.Doors;
 using TrainManager.Handles;
 using TrainManager.Motor;
 
@@ -19,13 +20,6 @@ namespace OpenBve {
 
 // Silence the absurd amount of unused variable warnings
 #pragma warning disable 0649
-		
-		// cars
-		internal struct Door {
-			internal int Direction;
-			internal double State;
-		}
-		
 		internal struct CarHoldBrake {
 			internal double CurrentAccelerationOutput;
 			internal double NextUpdateTime;

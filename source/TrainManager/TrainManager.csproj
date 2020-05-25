@@ -47,6 +47,9 @@
     <Compile Include="Brake\CarBrake.BrakeType.cs" />
     <Compile Include="Brake\CarBrake.cs" />
     <Compile Include="Brake\ElectroPneumaticBrakeType.cs" />
+    <Compile Include="Doors\Doors.cs" />
+    <Compile Include="Doors\Doors.DoorMode.cs" />
+    <Compile Include="Doors\Doors.TrainDoorState.cs" />
     <Compile Include="Handles\AbstractHandle.cs" />
     <Compile Include="Handles\AbstractHandle.Notched.cs" />
     <Compile Include="Handles\Brake\Loco.AirBrake.cs" />

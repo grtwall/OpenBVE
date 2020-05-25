@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -8,7 +6,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
-using RouteManager2;
+using TrainManager.Doors;
 using TrainManager.Handles;
 
 namespace OpenBve.Graphics.Renderers
@@ -24,8 +22,8 @@ namespace OpenBve.Graphics.Renderers
 			{
 				return;
 			}
-			TrainManager.TrainDoorState LeftDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, true, false);
-			TrainManager.TrainDoorState RightDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, false, true);
+			TrainDoorState LeftDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, true, false);
+			TrainDoorState RightDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, false, true);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Command = Element.Subject.ToLowerInvariant();
 			// default
@@ -399,7 +397,7 @@ namespace OpenBve.Graphics.Renderers
 				case "doorsleft":
 				case "doorsright":
 				{
-					if ((LeftDoors & TrainManager.TrainDoorState.AllClosed) == 0 | (RightDoors & TrainManager.TrainDoorState.AllClosed) == 0)
+					if ((LeftDoors & TrainDoorState.AllClosed) == 0 | (RightDoors & TrainDoorState.AllClosed) == 0)
 					{
 						Element.TransitionState -= speed * TimeElapsed;
 						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
@@ -409,16 +407,16 @@ namespace OpenBve.Graphics.Renderers
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					}
-					TrainManager.TrainDoorState Doors = Command == "doorsleft" ? LeftDoors : RightDoors;
-					if ((Doors & TrainManager.TrainDoorState.Mixed) != 0)
+					TrainDoorState Doors = Command == "doorsleft" ? LeftDoors : RightDoors;
+					if ((Doors & TrainDoorState.Mixed) != 0)
 					{
 						sc = MessageColor.Orange;
 					}
-					else if ((Doors & TrainManager.TrainDoorState.AllClosed) != 0)
+					else if ((Doors & TrainDoorState.AllClosed) != 0)
 					{
 						sc = MessageColor.Gray;
 					}
-					else if (TrainManager.PlayerTrain.Specs.DoorCloseMode == TrainManager.DoorMode.Manual)
+					else if (TrainManager.PlayerTrain.Specs.DoorCloseMode == DoorMode.Manual)
 					{
 						sc = MessageColor.Green;
 					}

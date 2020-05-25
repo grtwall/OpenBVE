@@ -11,6 +11,7 @@ using OpenBveApi.Trains;
 using OpenBveApi.World;
 using SoundManager;
 using TrainManager.Brake;
+using TrainManager.Doors;
 
 namespace OpenBve
 {

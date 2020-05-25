@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenBveApi.Trains;
 using TrainManager.Brake;
+using TrainManager.Doors;
 using TrainManager.Handles;
 
 namespace OpenBve
@@ -307,7 +308,7 @@ namespace OpenBve
 						TrainManager.Trains[0].Cars[i].Specs.AirBrake.BrakeCylinderCurrentPressure = (int)numericUpDownCylinder.Value * 1000;
 						TrainManager.Trains[0].Cars[i].Specs.AirBrake.StraightAirPipeCurrentPressure = (int)numericUpDownAirPipe.Value * 1000;
 
-						TrainManager.Trains[0].Cars[i].Specs.Doors = new TrainManager.Door[] { new TrainManager.Door(), new TrainManager.Door() };
+						TrainManager.Trains[0].Cars[i].Specs.Doors = new Door[] { new Door(), new Door() };
 						TrainManager.Trains[0].Cars[i].Specs.Doors[0].Direction = -1;
 						TrainManager.Trains[0].Cars[i].Specs.Doors[0].State = (double)numericUpDownLeft.Value;
 						TrainManager.Trains[0].Cars[i].Specs.Doors[1].Direction = 1;

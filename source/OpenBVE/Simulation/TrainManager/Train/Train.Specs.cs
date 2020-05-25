@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Runtime;
+using TrainManager.Doors;
 
 namespace OpenBve
 {
