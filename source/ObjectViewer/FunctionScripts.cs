@@ -3,6 +3,7 @@ using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using TrainManager.Brake;
+using TrainManager.Systems;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
@@ -941,7 +942,7 @@ namespace OpenBve {
 						// safety
 					case Instructions.SafetyPluginAvailable:
 						if (Train != null && Train.IsPlayerTrain) {
-							Function.Stack[s] = TrainManager.PlayerTrain.Specs.Safety.Mode == TrainManager.SafetySystem.Plugin ? 1.0 : 0.0;
+							Function.Stack[s] = TrainManager.PlayerTrain.Specs.Safety.Mode == DefaultSafetySystems.Plugin ? 1.0 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -951,7 +952,7 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						} else {
 							int n = (int)Math.Round(Function.Stack[s - 1]);
-							if (Train.Specs.Safety.Mode == TrainManager.SafetySystem.Plugin) {
+							if (Train.Specs.Safety.Mode == DefaultSafetySystems.Plugin) {
 								if (n >= 0 & n < PluginManager.CurrentPlugin.Panel.Length) {
 									Function.Stack[s - 1] = (double)PluginManager.CurrentPlugin.Panel[n];
 								} else {

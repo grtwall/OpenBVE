@@ -6,7 +6,9 @@ using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
+using TrainManager.Brake;
 using TrainManager.Doors;
+using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Systems;
 
@@ -171,10 +173,10 @@ namespace TrainEditor {
 			textboxNumberOfMotorCars.Text = Train.Car.NumberOfMotorCars.ToString(Culture);
 			textboxTrailerCarMass.Text = Train.Car.TrailerCarMass.ToString(Culture);
 			textboxNumberOfTrailerCars.Text = Train.Car.NumberOfTrailerCars.ToString(Culture);
-			textboxLengthOfACar.Text = Train.Car.LengthOfACar.ToString(Culture);
+			textboxLengthOfACar.Text = Train.Car.Length.ToString(Culture);
 			checkboxFrontCarIsMotorCar.Checked = Train.Car.FrontCarIsAMotorCar;
-			textboxWidthOfACar.Text = Train.Car.WidthOfACar.ToString(Culture);
-			textboxHeightOfACar.Text = Train.Car.HeightOfACar.ToString(Culture);
+			textboxWidthOfACar.Text = Train.Car.Width.ToString(Culture);
+			textboxHeightOfACar.Text = Train.Car.Height.ToString(Culture);
 			textboxCenterOfGravityHeight.Text = Train.Car.CenterOfGravityHeight.ToString(Culture);
 			textboxExposedFrontalArea.Text = Train.Car.ExposedFrontalArea.ToString(Culture);
 			textboxUnexposedFrontalArea.Text = Train.Car.UnexposedFrontalArea.ToString(Culture);
@@ -212,7 +214,7 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxBrakeCylinderDown, "BrakeCylinderDown", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Move.BrakeCylinderDown)) return false;
 			// brake
 			Train.Brake.BrakeType = (BrakeTypes)comboboxBrakeType.SelectedIndex;
-			Train.Brake.BrakeControlSystem = (TrainDat.Brake.BrakeControlSystems)comboboxBrakeControlSystem.SelectedIndex;
+			Train.Brake.BrakeControlSystem = (EletropneumaticBrakeType)comboboxBrakeControlSystem.SelectedIndex;
 			if (!SaveControlContent(textboxBrakeControlSpeed, "BrakeControlSpeed", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Brake.BrakeControlSpeed)) return false;
 			// pressure
 			if (!SaveControlContent(textboxBrakeCylinderServiceMaximumPressure, "BrakeCylinderServiceMaximumPressure", tabpagePropertiesOne, NumberRange.Positive, out Train.Pressure.BrakeCylinderServiceMaximumPressure)) return false;
@@ -244,7 +246,7 @@ namespace TrainEditor {
 				numericUpDownDriverBrakeNotches.Focus();
 				return false;
 			}
-			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
+			Train.Handle.HandleBehaviour = (EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
 			if (!SaveControlContent(textboxPowerNotchReduceSteps, "PowerNotchReduceSteps", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.PowerNotchReduceSteps)) return false;
 			// cab
 			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.X)) return false;
@@ -270,10 +272,10 @@ namespace TrainEditor {
 				textboxDriverCar.Focus();
 				return false;
 			}
-			if (!SaveControlContent(textboxLengthOfACar, "LengthOfACar", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.LengthOfACar)) return false;
+			if (!SaveControlContent(textboxLengthOfACar, "LengthOfACar", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.Length)) return false;
 			Train.Car.FrontCarIsAMotorCar = checkboxFrontCarIsMotorCar.Checked;
-			if (!SaveControlContent(textboxWidthOfACar, "WidthOfACar", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.WidthOfACar)) return false;
-			if (!SaveControlContent(textboxHeightOfACar, "HeightOfACar", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.HeightOfACar)) return false;
+			if (!SaveControlContent(textboxWidthOfACar, "WidthOfACar", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.Width)) return false;
+			if (!SaveControlContent(textboxHeightOfACar, "HeightOfACar", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.Height)) return false;
 			if (!SaveControlContent(textboxCenterOfGravityHeight, "CenterOfGravityHeight", tabpagePropertiesTwo, NumberRange.Any, out Train.Car.CenterOfGravityHeight)) return false;
 			if (!SaveControlContent(textboxExposedFrontalArea, "ExposedFrontalArea", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.ExposedFrontalArea)) return false;
 			if (!SaveControlContent(textboxUnexposedFrontalArea, "UnexposedFrontalArea", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.UnexposedFrontalArea)) return false;
@@ -1739,7 +1741,7 @@ namespace TrainEditor {
 
 		private void comboBoxEBHandleBehaviour_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour)comboBoxEBHandleBehaviour.SelectedIndex;
+			Train.Handle.HandleBehaviour = (EbHandleBehaviour)comboBoxEBHandleBehaviour.SelectedIndex;
 		}
 
 		private void comboBoxLocoBrakeType_SelectedIndexChanged(object sender, EventArgs e)

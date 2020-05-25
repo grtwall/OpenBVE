@@ -181,13 +181,6 @@ namespace OpenBve {
 			Pattern = 4,
 			Service = 5
 		}
-		internal enum SafetySystem {
-			Plugin = -1,
-			None = 0,
-			AtsSn = 1,
-			AtsP = 2,
-			Atc = 3
-		}
 		internal struct Ats {
 			internal double Time;
 			internal bool AtsPAvailable;

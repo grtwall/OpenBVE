@@ -133,13 +133,6 @@ namespace OpenBve {
 			Pattern = 4,
 			Service = 5
 		}
-		internal enum SafetySystem {
-			Plugin = -1,
-			None = 0,
-			AtsSn = 1,
-			AtsP = 2,
-			Atc = 3
-		}
 		internal struct Ats {
 			internal double Time;
 			internal bool AtsPAvailable;
@@ -168,8 +161,8 @@ namespace OpenBve {
 			internal int SectionIndex;
 		}
 		internal struct TrainSafety {
-			internal SafetySystem Mode;
-			internal SafetySystem ModeChange;
+			internal DefaultSafetySystems Mode;
+			internal DefaultSafetySystems ModeChange;
 			internal SafetyState State;
 			internal TrainPendingTransponder[] PendingTransponders;
 			internal Ats Ats;

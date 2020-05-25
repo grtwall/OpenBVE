@@ -72,6 +72,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\PassAlarm\PassAlarm.Types.cs" />
     <Compile Include="Systems\ReadhesionDevice\ReadhesionDevice.Types.cs" />
+    <Compile Include="Systems\SafetySystems\DefaultSafetySystems.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

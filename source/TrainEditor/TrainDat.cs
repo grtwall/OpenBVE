@@ -2,7 +2,10 @@
 using System.Linq;
 using System.Windows.Forms;
 using OpenBveApi.Runtime;
+using OpenBveApi.Trains;
+using TrainManager.Brake;
 using TrainManager.Doors;
+using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Systems;
 
@@ -96,19 +99,15 @@ namespace TrainEditor {
 				NotchedAirBrake = 1,
 				AutomaticAirBrake = 2
 			}
-			internal enum BrakeControlSystems {
-				None = 0,
-				ClosingElectromagneticValve = 1,
-				DelayIncludingSystem = 2
-			}
+
 			internal BrakeTypes BrakeType;
 			internal LocoBrakeTypes LocoBrakeType;
-			internal BrakeControlSystems BrakeControlSystem;
+			internal EletropneumaticBrakeType BrakeControlSystem;
 			internal double BrakeControlSpeed;
 			internal Brake() {
 				this.BrakeType = BrakeTypes.ElectromagneticStraightAirBrake;
 				this.LocoBrakeType = LocoBrakeTypes.NotFitted;
-				this.BrakeControlSystem = BrakeControlSystems.None;
+				this.BrakeControlSystem = EletropneumaticBrakeType.None;
 				this.BrakeControlSpeed = 0.0;
 			}
 		}
@@ -137,14 +136,6 @@ namespace TrainEditor {
 				Separate = 0,
 				Combined = 1
 			}
-			internal enum EbHandleBehaviour
-			{
-				NoAction = 0,
-				PowerNeutral = 1,
-				ReverserNeutral = 2,
-				PowerReverserNeutral = 3
-			}
-
 			internal enum LocoBrakeType
 			{
 				Combined = 0,
@@ -191,15 +182,12 @@ namespace TrainEditor {
 		
 		// car
 		/// <summary>The Car section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
-		internal class Car {
+		internal class Car : AbstractCar {
 			internal double MotorCarMass;
 			internal int NumberOfMotorCars;
 			internal double TrailerCarMass;
 			internal int NumberOfTrailerCars;
-			internal double LengthOfACar;
 			internal bool FrontCarIsAMotorCar;
-			internal double WidthOfACar;
-			internal double HeightOfACar;
 			internal double CenterOfGravityHeight;
 			internal double ExposedFrontalArea;
 			internal double UnexposedFrontalArea;
@@ -208,10 +196,10 @@ namespace TrainEditor {
 				this.NumberOfMotorCars = 1;
 				this.TrailerCarMass = 40.0;
 				this.NumberOfTrailerCars = 1;
-				this.LengthOfACar = 20.0;
+				this.Length = 20.0;
 				this.FrontCarIsAMotorCar = false;
-				this.WidthOfACar = 2.6;
-				this.HeightOfACar = 3.2;
+				this.Width = 2.6;
+				this.Height = 3.2;
 				this.CenterOfGravityHeight = 1.5;
 				this.ExposedFrontalArea = 5.0;
 				this.UnexposedFrontalArea = 1.6;
@@ -524,7 +512,7 @@ namespace TrainEditor {
 										if (b >= 0 & b <= 2) t.Brake.BrakeType = (BrakeTypes)b;
 										break;
 									case 1:
-										if (b >= 0 & b <= 2) t.Brake.BrakeControlSystem = (Brake.BrakeControlSystems)b;
+										if (b >= 0 & b <= 2) t.Brake.BrakeControlSystem = (EletropneumaticBrakeType)b;
 										break;
 									case 2:
 										if (a >= 0.0) t.Brake.BrakeControlSpeed = a;
@@ -575,7 +563,7 @@ namespace TrainEditor {
 										if (b >= 0) t.Handle.PowerNotchReduceSteps = b;
 										break;
 									case 4:
-										if (a >= 0 && a < 4) t.Handle.HandleBehaviour = (Handle.EbHandleBehaviour) b;
+										if (a >= 0 && a < 4) t.Handle.HandleBehaviour = (EbHandleBehaviour) b;
 										break;
 									case 5:
 										if (b > 0) t.Handle.LocoBrakeNotches = b;
@@ -630,16 +618,16 @@ namespace TrainEditor {
 										if (b >= 0) t.Car.NumberOfTrailerCars = b;
 										break;
 									case 4:
-										if (b > 0.0) t.Car.LengthOfACar = a;
+										if (b > 0.0) t.Car.Length = a;
 										break;
 									case 5:
 										t.Car.FrontCarIsAMotorCar = a == 1.0;
 										break;
 									case 6:
-										if (a > 0.0) t.Car.WidthOfACar = a;
+										if (a > 0.0) t.Car.Width = a;
 										break;
 									case 7:
-										if (a > 0.0) t.Car.HeightOfACar = a;
+										if (a > 0.0) t.Car.Height = a;
 										break;
 									case 8:
 										t.Car.CenterOfGravityHeight = a;
@@ -870,10 +858,10 @@ namespace TrainEditor {
 			b.AppendLine(t.Car.NumberOfMotorCars.ToString(Culture).PadRight(n, ' ') + "; NumberOfMotorCars");
 			b.AppendLine(t.Car.TrailerCarMass.ToString(Culture).PadRight(n, ' ') + "; TrailerCarMass");
 			b.AppendLine(t.Car.NumberOfTrailerCars.ToString(Culture).PadRight(n, ' ') + "; NumberOfTrailerCars");
-			b.AppendLine(t.Car.LengthOfACar.ToString(Culture).PadRight(n, ' ') + "; LengthOfACar");
+			b.AppendLine(t.Car.Length.ToString(Culture).PadRight(n, ' ') + "; LengthOfACar");
 			b.AppendLine((t.Car.FrontCarIsAMotorCar ? "1" : "0").PadRight(n, ' ') + "; FrontCarIsAMotorCar");
-			b.AppendLine(t.Car.WidthOfACar.ToString(Culture).PadRight(n, ' ') + "; WidthOfACar");
-			b.AppendLine(t.Car.HeightOfACar.ToString(Culture).PadRight(n, ' ') + "; HeightOfACar");
+			b.AppendLine(t.Car.Width.ToString(Culture).PadRight(n, ' ') + "; WidthOfACar");
+			b.AppendLine(t.Car.Height.ToString(Culture).PadRight(n, ' ') + "; HeightOfACar");
 			b.AppendLine(t.Car.CenterOfGravityHeight.ToString(Culture).PadRight(n, ' ') + "; CenterOfGravityHeight");
 			b.AppendLine(t.Car.ExposedFrontalArea.ToString(Culture).PadRight(n, ' ') + "; ExposedFrontalArea");
 			b.AppendLine(t.Car.UnexposedFrontalArea.ToString(Culture).PadRight(n, ' ') + "; UnexposedFrontalArea");
