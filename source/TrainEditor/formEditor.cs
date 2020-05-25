@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using TrainManager.Doors;
+using TrainManager.Motor;
 using TrainManager.Systems;
 
 namespace TrainEditor {
@@ -1096,7 +1097,7 @@ namespace TrainEditor {
 				float v = 0.2f * (float)i;
 				float x = (v - MotorMinimumX) * factorX;
 				float yPitch = offsetY + (float)Motor.Entries[i].Pitch * factorYpitch;
-				float yVolume = offsetY + (float)Motor.Entries[i].Volume * factorYvolume;
+				float yVolume = offsetY + (float)Motor.Entries[i].Gain * factorYvolume;
 				if (soundIndex != Motor.Entries[i].SoundIndex & length != 0) {
 					pointsPitch[length] = new PointF(x, pointsPitch[length - 1].Y);
 					pointsVolume[length] = new PointF(x, pointsVolume[length - 1].Y);
@@ -1151,7 +1152,7 @@ namespace TrainEditor {
 					float v = 0.2f * (float)i;
 					float x = (v - MotorMinimumX) * factorX;
 					float yPitch = offsetY + (float)Motor.Entries[i].Pitch * factorYpitch;
-					float yVolume = offsetY + (float)Motor.Entries[i].Volume * factorYvolume;
+					float yVolume = offsetY + (float)Motor.Entries[i].Gain * factorYvolume;
 					Color colorPitch, colorVolume;
 					if (Motor.Entries[i].SoundIndex >= 0) {
 						double hue = huefactor * (double)Motor.Entries[i].SoundIndex;
@@ -1277,11 +1278,11 @@ namespace TrainEditor {
 				}
 				if (ib >= Motor.Entries.Length) {
 					int n = Motor.Entries.Length;
-					Array.Resize<TrainDat.Motor.Entry>(ref Motor.Entries, ib + 1);
+					Array.Resize<MotorSoundTableEntry>(ref Motor.Entries, ib + 1);
 					for (int i = n; i < Motor.Entries.Length; i++) {
 						Motor.Entries[i].SoundIndex = -1;
-						Motor.Entries[i].Pitch = 100.0;
-						Motor.Entries[i].Volume = 128.0;
+						Motor.Entries[i].Pitch = 100.0f;
+						Motor.Entries[i].Gain = 128.0f;
 					}
 				}
 				if (ia <= ib) {
@@ -1303,7 +1304,7 @@ namespace TrainEditor {
 						float y = swap ? yPitch : MotorSelectionStartYPitch;
 						float dy = 0.2f * (yPitch - MotorSelectionStartYPitch) / (x - MotorSelectionStartX);
 						for (int i = ia ; i <= ib; i++) {
-							Motor.Entries[i].Pitch = Math.Max(y, 1.0);
+							Motor.Entries[i].Pitch = (float)Math.Max(y, 1.0);
 							y += dy;
 						}
 					} else if (radiobuttonVolume.Checked) {
@@ -1311,7 +1312,7 @@ namespace TrainEditor {
 						float y = swap ? yVolume : MotorSelectionStartYVolume;
 						float dy = 0.2f * (yVolume - MotorSelectionStartYVolume) / (x - MotorSelectionStartX);
 						for (int i = ia ; i <= ib; i++) {
-							Motor.Entries[i].Volume = Math.Max(y, 0.0);
+							Motor.Entries[i].Gain = (float)Math.Max(y, 0.0);
 							y += dy;
 						}
 					}

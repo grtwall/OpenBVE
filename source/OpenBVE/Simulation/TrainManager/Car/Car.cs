@@ -12,6 +12,7 @@ using OpenBveApi.World;
 using SoundManager;
 using TrainManager.Brake;
 using TrainManager.Doors;
+using TrainManager.Motor;
 
 namespace OpenBve
 {
@@ -354,8 +355,8 @@ namespace OpenBve
 				int ndir = Math.Sign(Specs.CurrentAccelerationOutput);
 				for (int h = 0; h < 2; h++)
 				{
-					int j = h == 0 ? TrainManager.MotorSound.MotorP1 : TrainManager.MotorSound.MotorP2;
-					int k = h == 0 ? TrainManager.MotorSound.MotorB1 : TrainManager.MotorSound.MotorB2;
+					int j = h == 0 ? BveMotorSound.MotorP1 : BveMotorSound.MotorP2;
+					int k = h == 0 ? BveMotorSound.MotorB1 : BveMotorSound.MotorB2;
 					if (odir > 0 & ndir <= 0)
 					{
 						if (j < Sounds.Motor.Tables.Length)

@@ -66,6 +66,9 @@
     <Compile Include="Handles\Other\Reverser.Positions.cs" />
     <Compile Include="Handles\Power\NotchedPower.cs" />
     <Compile Include="Motor\Acceleration\AccelerationCurve.cs" />
+    <Compile Include="Motor\Sounds\BVEMotorSound.cs" />
+    <Compile Include="Motor\Sounds\MotorSoundTable.cs" />
+    <Compile Include="Motor\Sounds\MotorSoundTable.Entry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\PassAlarm\PassAlarm.Types.cs" />
     <Compile Include="Systems\ReadhesionDevice\ReadhesionDevice.Types.cs" />

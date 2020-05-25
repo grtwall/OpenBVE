@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using OpenBveApi.Runtime;
 using TrainManager.Doors;
+using TrainManager.Motor;
 using TrainManager.Systems;
 
 namespace TrainEditor {
@@ -261,19 +262,14 @@ namespace TrainEditor {
 		// motor
 		/// <summary>Any of the Motor sections of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Motor {
-			internal struct Entry {
-				internal int SoundIndex;
-				internal double Pitch;
-				internal double Volume;
-			}
-			internal Entry[] Entries;
+			internal MotorSoundTableEntry[] Entries;
 			internal Motor() {
 				const int n = 800;
-				this.Entries = new Entry[n];
+				this.Entries = new MotorSoundTableEntry[n];
 				for (int i = 0; i < n; i++) {
 					this.Entries[i].SoundIndex = -1;
-					this.Entries[i].Pitch = 100.0;
-					this.Entries[i].Volume = 128.0;
+					this.Entries[i].Pitch = 100.0f;
+					this.Entries[i].Gain = 128.0f;
 				}
 			}
 		}
@@ -711,7 +707,7 @@ namespace TrainEditor {
 							Motor m = new Motor();
 							while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase)) {
 								if (n == m.Entries.Length) {
-									Array.Resize<Motor.Entry>(ref m.Entries, m.Entries.Length << 1);
+									Array.Resize<MotorSoundTableEntry>(ref m.Entries, m.Entries.Length << 1);
 								}
 								string u = Lines[i] + ",";
 								int k = 0;
@@ -727,10 +723,10 @@ namespace TrainEditor {
 												m.Entries[n].SoundIndex = b >= 0 ? b : -1;
 												break;
 											case 1:
-												m.Entries[n].Pitch = Math.Max(a, 0.0);
+												m.Entries[n].Pitch = (float)Math.Max(a, 0.0);
 												break;
 											case 2:
-												m.Entries[n].Volume = Math.Max(a, 0.0);
+												m.Entries[n].Gain = (float)Math.Max(a, 0.0);
 												break;
 										}
 									} k++;
@@ -738,7 +734,7 @@ namespace TrainEditor {
 								i++;
 								n++;
 							}
-							Array.Resize<Motor.Entry>(ref m.Entries, n);
+							Array.Resize<MotorSoundTableEntry>(ref m.Entries, n);
 							i--;
 							switch (section) {
 								case "#motor_p1":
@@ -919,11 +915,11 @@ namespace TrainEditor {
 					if (m.Entries[k].SoundIndex >= 0) break;
 				}
 				k = Math.Min(k + 2, m.Entries.Length);
-				Array.Resize<Motor.Entry>(ref m.Entries, k);
+				Array.Resize<MotorSoundTableEntry>(ref m.Entries, k);
 				for (int j = 0; j < m.Entries.Length; j++) {
 					b.Append(m.Entries[j].SoundIndex.ToString(Culture) + ",");
 					b.Append(m.Entries[j].Pitch.ToString(Culture) + ",");
-					b.AppendLine(m.Entries[j].Volume.ToString(Culture));
+					b.AppendLine(m.Entries[j].Gain.ToString(Culture));
 				}
 			}
 			System.IO.File.WriteAllText(FileName, b.ToString(), new System.Text.UTF8Encoding(true));

@@ -124,7 +124,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibRender2", "source\LibRen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteManager2", "source\RouteManager2\RouteManager2.csproj", "{4EF680D7-DF17-4978-9872-133EDC169B4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainManager", "Source\TrainManager\TrainManager.csproj", "{65CA4BE2-5A47-4A2C-B9DD-2C36DDFA2C46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainManager", "source\TrainManager\TrainManager.csproj", "{65CA4BE2-5A47-4A2C-B9DD-2C36DDFA2C46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
