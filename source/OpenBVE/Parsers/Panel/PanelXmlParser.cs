@@ -349,7 +349,7 @@ namespace OpenBve.Parsers.Panel
 						}
 						OpenBVEGame.RunInRenderThread(() =>
 						{
-							Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+							Program.CurrentHost.LoadTexture(ref tday, OpenGlTextureWrapMode.ClampClamp);
 							//Program.CurrentHost.LoadTexture(tnight, OpenGlTextureWrapMode.ClampClamp);
 						});
 						Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], 0.0, 0.0, tday.Width, tday.Height, new Vector2(0.5, 0.5), OffsetLayer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
@@ -667,7 +667,7 @@ namespace OpenBve.Parsers.Panel
 								}
 								OpenBVEGame.RunInRenderThread(() =>
 								{
-									Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+									Program.CurrentHost.LoadTexture(ref tday, OpenGlTextureWrapMode.ClampClamp);
 								});
 								int w = tday.Width;
 								int h = tday.Height;
@@ -891,7 +891,7 @@ namespace OpenBve.Parsers.Panel
 								}
 								OpenBVEGame.RunInRenderThread(() =>
 								{
-									Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+									Program.CurrentHost.LoadTexture(ref tday, OpenGlTextureWrapMode.ClampClamp);
 								});
 								double w = (double)tday.Width;
 								double h = (double)tday.Height;
@@ -1091,7 +1091,7 @@ namespace OpenBve.Parsers.Panel
 								}
 								OpenBVEGame.RunInRenderThread(() =>
 								{
-									Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+									Program.CurrentHost.LoadTexture(ref tday, OpenGlTextureWrapMode.ClampClamp);
 								});
 								int w = tday.Width;
 								int h = tday.Height;
