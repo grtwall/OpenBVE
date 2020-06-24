@@ -350,7 +350,10 @@ namespace OpenBve
 								{
 									UnifiedObject obj;
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
-										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
+										if (obj != null)
+										{
+											obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
+										}
 										Object = obj;
 
 										StaticObject staticObject = Object as StaticObject;
