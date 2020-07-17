@@ -144,9 +144,11 @@
     <Compile Include="Routes\LightDefinition.cs" />
     <Compile Include="Routes\RouteInterface.cs" />
     <Compile Include="Routes\StaticBackground.cs" />
-    <Compile Include="Routes\Track.cs" />
-    <Compile Include="Routes\Track.TrackElement.cs" />
-    <Compile Include="Routes\Track.TrackFollower.cs" />
+    <Compile Include="Routes\Track\PowerSupply.cs" />
+    <Compile Include="Routes\Track\PowerSupply.VoltageTypes.cs" />
+    <Compile Include="Routes\Track\Track.cs" />
+    <Compile Include="Routes\Track\Track.TrackElement.cs" />
+    <Compile Include="Routes\Track\Track.TrackFollower.cs" />
     <Compile Include="Sounds\Sounds.PathOrigin.cs" />
     <Compile Include="Sounds\Sounds.RawOrigin.cs" />
     <Compile Include="Sounds\Sounds.SoundOrigin.cs" />
@@ -176,6 +178,7 @@
     <Compile Include="Train\CarBrightness.cs" />
     <Compile Include="Train\AbstractCoupler.cs" />
     <Compile Include="Train\GeneralAI.cs" />
+    <Compile Include="Routes\Track\PowerSupply.Types.cs" />
     <Compile Include="Train\RequestStop.cs" />
     <Compile Include="Train\StopSkipMode.cs" />
     <Compile Include="Train\TrainStartMode.cs" />
@@ -224,6 +227,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Target Name="AfterBuild">
     <ItemGroup>
       <DependentFiles Include="$(SolutionDir)dependencies\**\*.*" />
