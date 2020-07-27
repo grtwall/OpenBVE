@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
@@ -52,7 +53,12 @@ namespace OpenBve
 			internal Coupler Coupler;
 			
 			internal double BeaconReceiverPosition;
+			/// <summary>Recieves all safety system beacons</summary>
 			internal TrackFollower BeaconReceiver;
+
+			internal double PantographPosition;
+			/// <summary>Provides current collection etc.</summary>
+			internal TrackFollower Pantograph;
 			/// <summary>Whether loading sway is enabled for this car</summary>
 			internal bool EnableLoadingSway = true;
 			/// <summary>A reference to the base train</summary>
@@ -66,6 +72,23 @@ namespace OpenBve
 			internal CameraAlignment InteriorCamera;
 
 			internal bool HasInteriorView = false;
+
+			public override Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies
+			{
+				get
+				{
+					if (Pantograph != null)
+					{
+						return Pantograph.AvailablePowerSupplies;
+					}
+					else
+					{
+						//Not fitted, so return empty collection
+						return new Dictionary<PowerSupplyTypes, PowerSupply>();
+					}
+					
+				}		
+			}
 			
 			internal Car(Train train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient)
 			{
@@ -75,6 +98,7 @@ namespace OpenBve
 				FrontAxle = new Axle(Program.CurrentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 				RearAxle = new Axle(Program.CurrentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 				BeaconReceiver = new TrackFollower(Program.CurrentHost, train);
+				BeaconReceiver.TriggerType = index == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
 				Doors = new Door[2];
@@ -82,6 +106,8 @@ namespace OpenBve
 				Doors[0].MaxTolerance = 0.0;
 				Doors[1].Width = 1000.0;
 				Doors[1].MaxTolerance = 0.0;
+				CurrentCarSection = -1;
+				ChangeCarSection(CarSectionType.NotVisible);
 			}
 
 			internal Car(Train train, int index)

@@ -60,7 +60,7 @@ namespace OpenBve {
 				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
-			const int currentVersion = 15311;
+			const int currentVersion = 18000;
 			int myVersion = -1;
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
@@ -152,6 +152,8 @@ namespace OpenBve {
 			Train.Handles.EmergencyBrake = new TrainManager.EmergencyHandle();
 			Train.Handles.HasLocoBrake = false;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
+			int numberOfPantographs = 1;
+			double pantographLocation = -1;
 			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0, driverPowerNotches = 0, driverBrakeNotches = 0;
 			TrainManager.MotorSoundTable[] Tables = new TrainManager.MotorSoundTable[4];
 			for (int i = 0; i < 4; i++) {
@@ -675,6 +677,20 @@ namespace OpenBve {
 										} else {
 											CarUnexposedFrontalArea = a;
 										} break;
+									case 11:
+										if (a <= 0.0)
+										{
+											Interface.AddMessage(MessageType.Error, false, "NumberOfPantographs is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										else
+										{
+											numberOfPantographs = (int)a;
+										}
+										break;
+									case 12:
+										//Do no validation here, as we don't necessarily yet know the length of a car
+										pantographLocation = a;
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -961,6 +977,19 @@ namespace OpenBve {
 					MaximumAcceleration = AccelerationCurves[i].StageOneAcceleration;
 				}
 			}
+			
+			if (pantographLocation < 0 || pantographLocation > CarLength)
+			{
+				//Pantograph location is relative from the front of the car
+				//Somone will probably want to add one outside the physical model, so just warn...
+				Interface.AddMessage(MessageType.Warning, false, "A PantographLocation of " + pantographLocation.ToString(Culture) + " places it outside the bounds of the car in file " + FileName);
+			}
+
+			if (numberOfPantographs > Cars)
+			{
+				Interface.AddMessage(MessageType.Error, false, "A total of " + numberOfPantographs.ToString(Culture) + " were defined, when the train has " + Cars.ToString(Culture) + " cars in file " + FileName);
+				numberOfPantographs = Cars;
+			}
 			// assign motor cars
 			if (MotorCars == 1) {
 				if (FrontCarIsMotorCar | TrailerCars == 0) {
@@ -1008,6 +1037,84 @@ namespace OpenBve {
 						if (i >= Cars) break;
 						Train.Cars[i].Specs.IsMotorCar = true;
 					}
+				}
+			}
+			// assign pantograph cars
+			if (numberOfPantographs == Cars)
+			{
+				//One pantograph per car
+				for (int i = 0; i < Train.Cars.Length; i++)
+				{
+					Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+				}
+			}
+			else if (numberOfPantographs == MotorCars)
+			{
+				//Assign pantograph to all motor cars
+				for (int i = 0; i < Train.Cars.Length; i++)
+				{
+					if (Train.Cars[i].Specs.IsMotorCar)
+					{
+						Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+					}
+				}
+			}
+			else if (numberOfPantographs == 1)
+			{
+				// With single pantograph, assign to the first motor car
+				for (int i = 0; i < Train.Cars.Length; i++)
+				{
+					if (Train.Cars[i].Specs.IsMotorCar)
+					{
+						Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+						break;
+					}
+				}
+			}
+			else if (numberOfPantographs == 2)
+			{
+				if (MotorCars >= 2)
+				{
+					// Assign pantographs to the first and last motor cars
+					for (int i = 0; i < Train.Cars.Length; i++)
+					{
+						if (Train.Cars[i].Specs.IsMotorCar)
+						{
+							Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+							break;
+						}
+					}
+					for (int i = Train.Cars.Length - 1; i > 0; i--)
+					{
+						if (Train.Cars[i].Specs.IsMotorCar)
+						{
+							Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+							break;
+						}
+					}
+				}
+				else
+				{
+					//Assign evenly
+					int i = (int)Math.Ceiling(0.25 * (double)(Cars - 1));
+					int j = (int)Math.Floor(0.75 * (double)(Cars - 1));
+					Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+					Train.Cars[j].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+				}
+			}
+			else
+			{
+				//Assign using motor cars algo
+				double t = 1.0 + numberOfPantographs;
+				double r = 0.0;
+				double x = 1.0;
+				while (true) {
+					double y = x + t - r;
+					x = Math.Ceiling(y);
+					r = x - y;
+					int i = (int)x;
+					if (i >= Cars) break;
+					Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
 				}
 			}
 			double MotorDeceleration = Math.Sqrt(MaximumAcceleration * BrakeDeceleration);
@@ -1184,15 +1291,10 @@ namespace OpenBve {
 				{
 					Train.Cars[i].Coupler = new TrainManager.Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], null, Train);
 				}
-				
-				Train.Cars[i].CurrentCarSection = -1;
-				Train.Cars[i].ChangeCarSection(CarSectionType.NotVisible);
-				Train.Cars[i].FrontBogie.ChangeSection(-1);
-				Train.Cars[i].RearBogie.ChangeSection(-1);
-				Train.Cars[i].Coupler.ChangeSection(-1);
+
+				Train.Cars[i].PantographPosition = pantographLocation;
 				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
 				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
-				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
 				Train.Cars[i].BeaconReceiverPosition = 0.5 * CarLength;
 				Train.Cars[i].FrontAxle.Follower.Car = Train.Cars[i];
 				Train.Cars[i].RearAxle.Follower.Car = Train.Cars[i];
