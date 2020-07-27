@@ -15,6 +15,7 @@ using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using RouteManager2.MessageManager;
 using SoundManager;
 
@@ -66,6 +67,30 @@ namespace OpenBve
 			internal double CriticalCollisionSpeedDifference = 8.0;
 
 			private double previousRouteLimit = 0.0;
+
+			public override Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies
+			{
+				get
+				{
+					Dictionary<PowerSupplyTypes, PowerSupply> supplies = new Dictionary<PowerSupplyTypes, PowerSupply>();
+					for (int i = 0; i < Cars.Length; i++)
+					{
+						if (Cars[i].AvailablePowerSupplies.Count > 0)
+						{
+							for (int j = 0; j < Cars[i].AvailablePowerSupplies.Count; j++)
+							{
+								PowerSupplyTypes type = Cars[i].AvailablePowerSupplies.ElementAt(j).Key;
+								if (supplies.ContainsKey(type))
+								{
+									PowerSupply supply = supplies[type];
+									if(supply.V)
+								}
+							}
+						}
+					}
+					return supplies;
+				}
+			}
 
 			internal Train(TrainState state)
 			{
