@@ -79,11 +79,11 @@ namespace OpenBve
 						{
 							for (int j = 0; j < Cars[i].AvailablePowerSupplies.Count; j++)
 							{
+
 								PowerSupplyTypes type = Cars[i].AvailablePowerSupplies.ElementAt(j).Key;
-								if (supplies.ContainsKey(type))
+								if (!supplies.ContainsKey(type))
 								{
-									PowerSupply supply = supplies[type];
-									if(supply.V)
+									supplies.Add(type, Cars[i].AvailablePowerSupplies.ElementAt(j).Value);
 								}
 							}
 						}

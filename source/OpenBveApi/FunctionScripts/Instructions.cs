@@ -32,8 +32,16 @@
 		SafetyPluginAvailable, SafetyPluginState, PassAlarm, StationAdjustAlarm,
 		TimetableVisible, DistanceNextStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop, TerminalStation,
 		RouteLimit,
-		SectionAspectNumber, CurrentObjectState
-#pragma warning restore CS1591
+		SectionAspectNumber, CurrentObjectState,
+
+		/*
+		 * Power supply bits
+		 * Added by extended routefile format from 1.8.0
+		 */
+		OverheadVolts, OverheadVoltsTarget, ThirdRailVolts, ThirdRailVoltsTarget, FourthRailVolts, FourthRailVoltsTarget,
+		OverheadAC, ThirdRailAC, FourthRailAC,
+		OverheadHeight, OverheadHeightTarget, ThirdRailHeight, ThirdRailHeightTarget, FourthRailHeight, FourthRailHeightTarget,
+		#pragma warning restore CS1591
 			
 		}
 }
