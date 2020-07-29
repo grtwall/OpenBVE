@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
@@ -780,6 +780,33 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.FourthRailAC;
 							n++; s++; if (s >= m) m = s; break;
+						case "overheadamps":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.OverheadAmps;
+							n++; s++; if (s >= m) m = s; break;
+						case "overheadampsindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.OverheadAmpsTarget;
+							n++; break;
+						case "thirdrailamps":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.ThirdRailAmps;
+							n++; s++; if (s >= m) m = s; break;
+						case "thirdrailampsindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.ThirdRailAmpsTarget;
+							n++; break;
+						case "fourthrailamps":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.FourthRailAmps;
+							n++; s++; if (s >= m) m = s; break;
+						case "fourthrailampsindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.FourthRailAmpsTarget;
+							n++; break;
 							// default
 						default:
 							throw new System.IO.InvalidDataException("Unknown command " + Arguments[i] + " encountered in function script " + Expression);

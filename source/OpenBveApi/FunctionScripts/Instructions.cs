@@ -41,6 +41,7 @@
 		OverheadVolts, OverheadVoltsTarget, ThirdRailVolts, ThirdRailVoltsTarget, FourthRailVolts, FourthRailVoltsTarget,
 		OverheadAC, ThirdRailAC, FourthRailAC,
 		OverheadHeight, OverheadHeightTarget, ThirdRailHeight, ThirdRailHeightTarget, FourthRailHeight, FourthRailHeightTarget,
+		OverheadAmps, OverheadAmpsTarget, ThirdRailAmps, ThirdRailAmpsTarget, FourthRailAmps, FourthRailAmpsTarget
 		#pragma warning restore CS1591
 			
 		}
