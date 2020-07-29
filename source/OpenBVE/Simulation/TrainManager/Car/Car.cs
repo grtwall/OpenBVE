@@ -97,8 +97,10 @@ namespace OpenBve
 				CarSections = new CarSection[] { };
 				FrontAxle = new Axle(Program.CurrentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 				RearAxle = new Axle(Program.CurrentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
-				BeaconReceiver = new TrackFollower(Program.CurrentHost, train);
-				BeaconReceiver.TriggerType = index == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
+				BeaconReceiver = new TrackFollower(Program.CurrentHost, train)
+				{
+					TriggerType = index == 0 ? EventTriggerType.TrainFront : EventTriggerType.None
+				};
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
 				Doors = new Door[2];
@@ -117,7 +119,10 @@ namespace OpenBve
 				CarSections = new CarSection[] { };
 				FrontAxle = new Axle(Program.CurrentHost, train, this);
 				RearAxle = new Axle(Program.CurrentHost, train, this);
-				BeaconReceiver = new TrackFollower(Program.CurrentHost, train);
+				BeaconReceiver = new TrackFollower(Program.CurrentHost, train)
+				{
+					TriggerType = index == 0 ? EventTriggerType.TrainFront : EventTriggerType.None
+				};
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
 				Doors = new Door[2];
@@ -125,6 +130,8 @@ namespace OpenBve
 				Doors[0].MaxTolerance = 0.0;
 				Doors[1].Width = 1000.0;
 				Doors[1].MaxTolerance = 0.0;
+				CurrentCarSection = -1;
+				ChangeCarSection(CarSectionType.NotVisible);
 			}
 
 			/// <summary>Moves the car</summary>
@@ -144,6 +151,10 @@ namespace OpenBve
 						if (baseTrain.State != TrainState.Disposed)
 						{
 							BeaconReceiver.UpdateRelative(Delta, true, true);
+							if (Pantograph != null)
+							{
+								Pantograph.UpdateRelative(Delta, true, true);
+							}
 						}
 					}
 				}
@@ -195,6 +206,11 @@ namespace OpenBve
 				RearAxle.Follower.UpdateAbsolute(s - d, false, false);
 				double b = FrontAxle.Follower.TrackPosition - FrontAxle.Position + BeaconReceiverPosition;
 				BeaconReceiver.UpdateAbsolute(b, false, false);
+				if (Pantograph != null)
+				{
+					b = FrontAxle.Follower.TrackPosition - FrontAxle.Position + PantographPosition;
+					Pantograph.UpdateAbsolute(b, false, false);
+				}
 			}
 
 			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)

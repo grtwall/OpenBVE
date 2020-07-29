@@ -1039,6 +1039,10 @@ namespace OpenBve
 					Cars[i].RearBogie.RearAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.RearAxle.Position;
 					//Beacon reciever (AWS, ATC etc.)
 					Cars[i].BeaconReceiver.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].BeaconReceiverPosition;
+					if (Cars[i].Pantograph != null)
+					{
+						Cars[i].Pantograph.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].PantographPosition;
+					}
 					TrackPosition -= Cars[i].Length;
 					if (i < Cars.Length - 1)
 					{
