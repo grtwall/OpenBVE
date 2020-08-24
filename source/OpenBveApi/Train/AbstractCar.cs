@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 
 namespace OpenBveApi.Trains
 {
@@ -77,15 +75,6 @@ namespace OpenBveApi.Trains
 		public virtual void Reverse()
 		{
 
-		}
-
-		/// <summary>Returns the available power supplies to this car</summary>
-		public virtual Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies
-		{
-			get
-			{
-				return new Dictionary<PowerSupplyTypes, PowerSupply>();
-			}
 		}
 	}
 }

@@ -179,6 +179,7 @@
     <Compile Include="Train\AbstractCoupler.cs" />
     <Compile Include="Train\GeneralAI.cs" />
     <Compile Include="Routes\Track\PowerSupply.Types.cs" />
+    <Compile Include="Train\Pantograph.cs" />
     <Compile Include="Train\RequestStop.cs" />
     <Compile Include="Train\StopSkipMode.cs" />
     <Compile Include="Train\TrainStartMode.cs" />

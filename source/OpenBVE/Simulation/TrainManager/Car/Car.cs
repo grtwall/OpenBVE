@@ -11,6 +11,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using OpenTK.Graphics.ES11;
 using SoundManager;
 
 namespace OpenBve
@@ -18,7 +19,7 @@ namespace OpenBve
 	public static partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
-		internal partial class Car : AbstractCar
+		internal class Car : AbstractCar
 		{
 			
 			/// <summary>The front bogie</summary>
@@ -55,10 +56,8 @@ namespace OpenBve
 			internal double BeaconReceiverPosition;
 			/// <summary>Recieves all safety system beacons</summary>
 			internal TrackFollower BeaconReceiver;
-
-			internal double PantographPosition;
-			/// <summary>Provides current collection etc.</summary>
-			internal TrackFollower Pantograph;
+			/// <summary>The car's pantograph</summary>
+			internal Pantograph Pantograph;
 			/// <summary>Whether loading sway is enabled for this car</summary>
 			internal bool EnableLoadingSway = true;
 			/// <summary>A reference to the base train</summary>
@@ -72,23 +71,6 @@ namespace OpenBve
 			internal CameraAlignment InteriorCamera;
 
 			internal bool HasInteriorView = false;
-
-			public override Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies
-			{
-				get
-				{
-					if (Pantograph != null)
-					{
-						return Pantograph.AvailablePowerSupplies;
-					}
-					else
-					{
-						//Not fitted, so return empty collection
-						return new Dictionary<PowerSupplyTypes, PowerSupply>();
-					}
-					
-				}		
-			}
 			
 			internal Car(Train train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient)
 			{
@@ -100,10 +82,6 @@ namespace OpenBve
 				BeaconReceiver = new TrackFollower(Program.CurrentHost, train)
 				{
 					TriggerType = index == 0 ? EventTriggerType.TrainFront : EventTriggerType.None
-				};
-				Pantograph = new TrackFollower(Program.CurrentHost, train)
-				{
-					TriggerType = EventTriggerType.None
 				};
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
@@ -157,7 +135,7 @@ namespace OpenBve
 							BeaconReceiver.UpdateRelative(Delta, true, true);
 							if (Pantograph != null)
 							{
-								Pantograph.UpdateRelative(Delta, true, true);
+								Pantograph.Update(Delta, false);
 							}
 						}
 					}
@@ -212,7 +190,7 @@ namespace OpenBve
 				BeaconReceiver.UpdateAbsolute(delta + BeaconReceiverPosition, false, false);
 				if (Pantograph != null)
 				{
-					Pantograph.UpdateAbsolute(delta + PantographPosition, false, false);
+					Pantograph.Update(delta, true);
 				}
 			}
 

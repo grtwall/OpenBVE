@@ -1202,12 +1202,10 @@ namespace OpenBve {
 				{
 					Train.Cars[i].Coupler = new TrainManager.Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], null, Train);
 				}
-
-				Train.Cars[i].PantographPosition = pantographLocation;
 				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
 				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 				Train.Cars[i].BeaconReceiverPosition = 0.5 * CarLength;
-				Train.Cars[i].PantographPosition = pantographLocation;
+				Train.Cars[i].Pantograph = new Pantograph(Program.CurrentHost, pantographLocation);
 				Train.Cars[i].FrontAxle.Follower.Car = Train.Cars[i];
 				Train.Cars[i].RearAxle.Follower.Car = Train.Cars[i];
 				Train.Cars[i].FrontAxle.Position = AxleDistance;
