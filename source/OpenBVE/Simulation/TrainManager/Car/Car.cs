@@ -101,6 +101,10 @@ namespace OpenBve
 				{
 					TriggerType = index == 0 ? EventTriggerType.TrainFront : EventTriggerType.None
 				};
+				Pantograph = new TrackFollower(Program.CurrentHost, train)
+				{
+					TriggerType = EventTriggerType.None
+				};
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
 				Doors = new Door[2];
@@ -204,12 +208,11 @@ namespace OpenBve
 				double d = 0.5 * (FrontAxle.Follower.TrackPosition - RearAxle.Follower.TrackPosition);
 				FrontAxle.Follower.UpdateAbsolute(s + d, false, false);
 				RearAxle.Follower.UpdateAbsolute(s - d, false, false);
-				double b = FrontAxle.Follower.TrackPosition - FrontAxle.Position + BeaconReceiverPosition;
-				BeaconReceiver.UpdateAbsolute(b, false, false);
+				double delta = FrontAxle.Follower.TrackPosition - FrontAxle.Position;
+				BeaconReceiver.UpdateAbsolute(delta + BeaconReceiverPosition, false, false);
 				if (Pantograph != null)
 				{
-					b = FrontAxle.Follower.TrackPosition - FrontAxle.Position + PantographPosition;
-					Pantograph.UpdateAbsolute(b, false, false);
+					Pantograph.UpdateAbsolute(delta + PantographPosition, false, false);
 				}
 			}
 
@@ -395,8 +398,8 @@ namespace OpenBve
 				int ndir = Math.Sign(Specs.CurrentAccelerationOutput);
 				for (int h = 0; h < 2; h++)
 				{
-					int j = h == 0 ? TrainManager.MotorSound.MotorP1 : TrainManager.MotorSound.MotorP2;
-					int k = h == 0 ? TrainManager.MotorSound.MotorB1 : TrainManager.MotorSound.MotorB2;
+					int j = h == 0 ? MotorSound.MotorP1 : MotorSound.MotorP2;
+					int k = h == 0 ? MotorSound.MotorB1 : MotorSound.MotorB2;
 					if (odir > 0 & ndir <= 0)
 					{
 						if (j < Sounds.Motor.Tables.Length)
