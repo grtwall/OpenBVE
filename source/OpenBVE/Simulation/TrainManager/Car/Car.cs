@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
@@ -11,7 +10,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
-using OpenTK.Graphics.ES11;
 using SoundManager;
 
 namespace OpenBve
@@ -554,7 +552,7 @@ namespace OpenBve
 				}
 				//When changing car section, do not apply damping
 				//This stops objects from spinning if the last position before they were hidden is different
-				baseTrain.Cars[Index].UpdateObjects(0.0, true, false);
+				UpdateObjects(0.0, true, false);
 			}
 			
 			/// <summary>Updates the currently displayed objects for this car</summary>
@@ -1197,18 +1195,11 @@ namespace OpenBve
 				}
 				// power
 				double wheelspin = 0.0;
-				double wheelSlipAccelerationMotorFront;
-				double wheelSlipAccelerationMotorRear;
-				double wheelSlipAccelerationBrakeFront;
-				double wheelSlipAccelerationBrakeRear;
-				if (Derailed)
-				{
-					wheelSlipAccelerationMotorFront = 0.0;
-					wheelSlipAccelerationBrakeFront = 0.0;
-					wheelSlipAccelerationMotorRear = 0.0;
-					wheelSlipAccelerationBrakeRear = 0.0;
-				}
-				else
+				double wheelSlipAccelerationMotorFront = 0.0;
+				double wheelSlipAccelerationMotorRear = 0.0;
+				double wheelSlipAccelerationBrakeFront = 0.0;
+				double wheelSlipAccelerationBrakeRear = 0.0;
+				if(!Derailed)
 				{
 					wheelSlipAccelerationMotorFront = FrontAxle.CriticalWheelSlipAccelerationForElectricMotor(Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 					wheelSlipAccelerationMotorRear = RearAxle.CriticalWheelSlipAccelerationForElectricMotor(Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
