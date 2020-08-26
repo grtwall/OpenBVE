@@ -99,7 +99,7 @@ namespace OpenBve {
 							double min = Function.Stack[s - 2];
 							double max = Function.Stack[s - 1];
 							var randomGenerator = new Random();
-							Function.Stack[s - 2] =  min + randomGenerator.NextDouble() * (max - min);
+							Function.Stack[s - 2] = min + randomGenerator.NextDouble() * (max - min);
 							s--;
 						}
 						break;
@@ -1340,7 +1340,7 @@ namespace OpenBve {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null)
+							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null || Train.Cars[i].Pantograph.CollectsPower == false)
 							{
 								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].Voltage : 0.0;
 							}
@@ -1369,7 +1369,7 @@ namespace OpenBve {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null)
+							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null || Train.Cars[i].Pantograph.CollectsPower == false)
 							{
 								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].Voltage : 0.0;
 							}
@@ -1398,7 +1398,7 @@ namespace OpenBve {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null)
+							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null || Train.Cars[i].Pantograph.CollectsPower == false)
 							{
 								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.FourthRail].Voltage : 0.0;
 							}
@@ -1544,7 +1544,7 @@ namespace OpenBve {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null)
+							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null || Train.Cars[i].Pantograph.CollectsPower == false)
 							{
 								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].Amperage : 0.0;
 							}
@@ -1573,7 +1573,7 @@ namespace OpenBve {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null)
+							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null || Train.Cars[i].Pantograph.CollectsPower == false)
 							{
 								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].Amperage : 0.0;
 							}
@@ -1602,7 +1602,7 @@ namespace OpenBve {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null)
+							if (j >= 0 & j < Train.Cars.Length || Train.Cars[j].Pantograph == null || Train.Cars[i].Pantograph.CollectsPower == false)
 							{
 								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.FourthRail].Amperage : 0.0;
 							}

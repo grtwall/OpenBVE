@@ -75,7 +75,7 @@ namespace OpenBve
 					Dictionary<PowerSupplyTypes, PowerSupply> supplies = new Dictionary<PowerSupplyTypes, PowerSupply>();
 					for (int i = 0; i < Cars.Length; i++)
 					{
-						if (Cars[i].Pantograph == null)
+						if (Cars[i].Pantograph == null || Cars[i].Pantograph.CollectsPower == false)
 						{
 							continue;
 						}
