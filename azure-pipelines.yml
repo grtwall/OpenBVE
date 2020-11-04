@@ -49,7 +49,30 @@ jobs:
   - task: CopyFilesOverSSH@0
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     inputs:
-     sshEndpoint: vps.bvecornwall.co.uk:4500
-     #sourceFolder:
+     sshEndpoint: 'BuildServer'
+     contents: \*.dmg
+     targetFolder: '/var/www/vps.bvecornwall.co.uk/public/OpenBVE/Builds/'
+     overwrite: true
+
+### Linux makefile build
+
+- job: LinuxMakeBuild
+  displayName: 'Build on Linux (makefile)'
+  pool:
+    vmImage: 'ubuntu-16.04'
+
+  variables:
+    solution: 'OpenBVE.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+
+  steps:
+  - task: NuGetToolInstaller@1
+  - script: make publish 
+  - task: CopyFilesOverSSH@0
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    inputs:
+     sshEndpoint: 'BuildServer'
+     contents: \*.zip
      targetFolder: '/var/www/vps.bvecornwall.co.uk/public/OpenBVE/Builds/'
      overwrite: true
