@@ -1,10 +1,9 @@
-# .NET Desktop
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+# This YAML runs the daily test and upload builds on the master branch
 
 trigger:
 - master
+
+### Test on latest Windows and .Net version
 
 jobs:
 - job: WindowsBuild
@@ -30,8 +29,9 @@ jobs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
 
-### Windows build I believe works
-### Apple build is WIP, not tested yet
+### Build and upload via makefile on OS-X
+### This uses Mono 6.8.0 as the default version isn't high enough on this image
+### As we're 32-bit only at present 10.15+ is no good to us
 
 - job: AppleMakeBuild
   displayName: 'Build on Apple OS-X (makefile)'
@@ -45,6 +45,8 @@ jobs:
 
   steps:
   - task: NuGetToolInstaller@1
+### Default Mono version isn't high enough on this OS-X image so kick to the latest
+  - script: sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 6_8_0
   - script: make publish 
   - task: CopyFilesOverSSH@0
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -55,6 +57,7 @@ jobs:
      overwrite: true
 
 ### Linux makefile build
+### This runs on the latest Mono version installed
 
 - job: LinuxMakeBuild
   displayName: 'Build on Linux (makefile)'
