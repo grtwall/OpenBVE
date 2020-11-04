@@ -12,23 +12,23 @@ jobs:
   pool:
     vmImage: 'windows-latest'
 
-    variables:
-      solution: 'OpenBVE.sln'
-      buildPlatform: 'Any CPU'
-      buildConfiguration: 'Release'
+  variables:
+    solution: 'OpenBVE.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
 
-    steps:
-    - task: NuGetToolInstaller@1
+  steps:
+  - task: NuGetToolInstaller@1
 
-    - task: NuGetCommand@2
-      inputs:
-        restoreSolution: '$(solution)'
+  - task: NuGetCommand@2
+    inputs:
+      restoreSolution: '$(solution)'
 
-    - task: VSBuild@1
-      inputs:
-        solution: '$(solution)'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
+  - task: VSBuild@1
+    inputs:
+      solution: '$(solution)'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
 
 ### Windows build I believe works
 ### Apple build is WIP, not tested yet
@@ -38,18 +38,18 @@ jobs:
   pool:
     vmImage: 'macos-10.14'
 
-    variables:
-      solution: 'OpenBVE.sln'
-      buildPlatform: 'Any CPU'
-      buildConfiguration: 'Release'
+  variables:
+    solution: 'OpenBVE.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
 
-    steps:
-    - task: NuGetToolInstaller@1
-    - script: make publish 
-    - task: CopyFilesOverSSH@0
-      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-      inputs:
-      sshEndpoint: 'BuildServer'
-      contents: /*.dmg
-      targetFolder: $(DailyFolder)
-      overwrite: true
+  steps:
+  - task: NuGetToolInstaller@1
+  - script: make publish 
+  - task: CopyFilesOverSSH@0
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    inputs:
+     sshEndpoint: vps.bvecornwall.co.uk:4500
+     #sourceFolder:
+     targetFolder: '/var/www/vps.bvecornwall.co.uk/public/OpenBVE/Builds/'
+     overwrite: true
