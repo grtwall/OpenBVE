@@ -44,7 +44,7 @@ namespace OpenBve
 
 		internal JoystickManager()
 		{
-			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows)
+			if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows || IntPtr.Size != 4)
 			{
 				return;
 			}

@@ -241,7 +241,22 @@ namespace OpenBve
 
 				if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows | IntPtr.Size != 4)
 				{
-					Interface.AddMessage(MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on 32-bit Microsoft Windows or compatible.");
+					if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows && IntPtr.Size != 4)
+					{
+						//We can't load the plugin directly on x64 Windows, so use the proxy interface
+						Plugin = new ProxyPlugin(pluginFile, this);
+						if (Plugin.Load(vehicleSpecs(), mode))
+						{
+							return true;
+						}
+
+						Plugin = null;
+						Interface.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " failed to load.");
+						return false;
+					}
+
+					//WINE doesn't seem to like the WCF proxy :(
+					Interface.AddMessage(MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on Microsoft Windows or compatible.");
 					return false;
 				}
 
