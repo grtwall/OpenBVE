@@ -185,19 +185,26 @@ namespace WCFServer
 			}
 		}
 
-		public void KeyDown(int key)
+		public void KeyDown(VirtualKeys key)
 		{
+#if DEBUG
+			Console.WriteLine(key + @" was pressed");
+#endif
 			try {
-				Win32KeyDown(key);
+				Win32KeyDown((int)key);
 			} catch (Exception ex) {
 				Callback.ReportError(ex.ToString());
 			}
+			
 		}
 
-		public void KeyUp(int key)
+		public void KeyUp(VirtualKeys key)
 		{
+#if DEBUG
+			Console.WriteLine(key + @" was released");
+#endif
 			try {
-				Win32KeyUp(key);
+				Win32KeyUp((int)key);
 			} catch (Exception ex) {
 				Callback.ReportError(ex.ToString());
 			}

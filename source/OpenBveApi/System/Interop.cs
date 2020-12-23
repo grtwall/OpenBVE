@@ -55,10 +55,10 @@ namespace OpenBveApi.Interop
 		void SetBrake(int brakeNotch);
 
 		[OperationContract]
-		void KeyDown(int key);
+		void KeyDown(VirtualKeys key);
 
 		[OperationContract]
-		void KeyUp(int key);
+		void KeyUp(VirtualKeys key);
 
 		[OperationContract]
 		void HornBlow(int type);

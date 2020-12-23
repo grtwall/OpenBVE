@@ -157,10 +157,10 @@ namespace OpenBve {
 			pluginProxy.setBrake(brakeNotch);
 		}
 		internal override void KeyDown(VirtualKeys key) {
-			pluginProxy.keyDown((int)key);
+			pluginProxy.keyDown(key);
 		}
 		internal override void KeyUp(VirtualKeys key) {
-			pluginProxy.keyUp((int)key);
+			pluginProxy.keyUp(key);
 		}
 		internal override void HornBlow(HornTypes type) {
 			pluginProxy.hornBlow((int)type);

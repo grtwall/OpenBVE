@@ -26,9 +26,9 @@ namespace OpenBve
 
 	    void setBrake(int brakeNotch);
 
-	    void keyDown(int key);
+	    void keyDown(VirtualKeys key);
 
-	    void keyUp(int key);
+	    void keyUp(VirtualKeys key);
 
 	    void hornBlow(int type);
 
@@ -154,12 +154,12 @@ namespace OpenBve
 		    pipeProxy.SetBrake(brakeNotch);
 	    }
 
-	    public void keyDown(int key)
+	    public void keyDown(VirtualKeys key)
 	    {
 		    pipeProxy.KeyDown(key);
 	    }
 
-	    public void keyUp(int key)
+	    public void keyUp(VirtualKeys key)
 	    {
 		    pipeProxy.KeyUp(key);
 	    }
