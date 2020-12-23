@@ -46,7 +46,7 @@ namespace WCFServer
 				Callback.ReportError("Error loading Win32 plugin: " + ex);
 				throw;
 			}
-			if (version != 131072) {
+			if (version == 0 && System.IO.Path.GetFileName(PluginFile).ToLowerInvariant() != "ats2.dll" || version != 131072) {
 				Callback.ReportError("Win32 plugin " + PluginFile + " is of an unsupported version.");
 				try {
 					Win32Dispose();
@@ -57,7 +57,12 @@ namespace WCFServer
 				Win32UnloadDLL();
 				return false;
 			}
-			try {
+			try
+			{
+#if DEBUG
+				Console.WriteLine(@"Brake Notches: " + specs.BrakeNotches);
+				Console.WriteLine(@"Power Notches: " + specs.PowerNotches);
+#endif
 				Win32VehicleSpec win32Spec;
 				win32Spec.BrakeNotches = specs.BrakeNotches;
 				win32Spec.PowerNotches = specs.PowerNotches;
@@ -159,7 +164,6 @@ namespace WCFServer
 
 		public void SetReverser(int reverser)
 		{
-			Callback.ReportError("test");
 			try {
 				Win32SetReverser(reverser);
 			} catch (Exception ex) {
@@ -210,16 +214,16 @@ namespace WCFServer
 			}
 		}
 
-		public void HornBlow(int type)
+		public void HornBlow(HornTypes type)
 		{
 			try {
-				Win32HornBlow(type);
+				Win32HornBlow((int)type);
 			} catch (Exception ex) {
 				Callback.ReportError(ex.ToString());
 			}
 		}
 
-		public void DoorChange(int oldState, int newState)
+		public void DoorChange(DoorStates oldState, DoorStates newState)
 		{
 			if (oldState == 0 & newState != 0) {
 				try {

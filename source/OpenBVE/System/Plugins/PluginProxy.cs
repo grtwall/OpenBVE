@@ -30,9 +30,9 @@ namespace OpenBve
 
 	    void keyUp(VirtualKeys key);
 
-	    void hornBlow(int type);
+	    void hornBlow(HornTypes type);
 
-	    void doorChange(int oldState, int newState);
+	    void doorChange(DoorStates oldState, DoorStates newState);
 
 	    void setSignal(int aspect);
 
@@ -164,12 +164,12 @@ namespace OpenBve
 		    pipeProxy.KeyUp(key);
 	    }
 
-	    public void hornBlow(int type)
+	    public void hornBlow(HornTypes type)
 	    {
 		    pipeProxy.HornBlow(type);
 	    }
 
-	    public void doorChange(int oldState, int newState)
+	    public void doorChange(DoorStates oldState, DoorStates newState)
 	    {
 		    pipeProxy.DoorChange(oldState, newState);
 	    }

@@ -163,10 +163,10 @@ namespace OpenBve {
 			pluginProxy.keyUp(key);
 		}
 		internal override void HornBlow(HornTypes type) {
-			pluginProxy.hornBlow((int)type);
+			pluginProxy.hornBlow(type);
 		}
 		internal override void DoorChange(DoorStates oldState, DoorStates newState) {
-			pluginProxy.doorChange((int)oldState, (int)newState);
+			pluginProxy.doorChange(oldState, newState);
 		}
 
 		protected override void SetSignal(SignalData[] signal) {

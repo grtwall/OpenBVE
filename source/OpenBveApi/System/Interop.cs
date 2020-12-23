@@ -61,10 +61,10 @@ namespace OpenBveApi.Interop
 		void KeyUp(VirtualKeys key);
 
 		[OperationContract]
-		void HornBlow(int type);
+		void HornBlow(HornTypes type);
 
 		[OperationContract]
-		void DoorChange(int oldState, int newState);
+		void DoorChange(DoorStates oldState, DoorStates newState);
 
 		[OperationContract]
 		void SetSignal(int aspect);
