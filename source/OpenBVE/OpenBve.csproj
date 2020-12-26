@@ -248,12 +248,9 @@
     <Compile Include="System\Input\Controls.Control.cs" />
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Input\InputDevicePlugin.cs" />
-    
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
-    <Compile Include="System\Plugins\PluginProxy.cs" />
-    <Compile Include="System\Plugins\ProxyPlugin.cs" />
     <Compile Include="System\Program\CommandLine.cs" />
     <Compile Include="UserInterface\formRaildriverCalibration.cs">
       <SubType>Form</SubType>
@@ -334,6 +331,9 @@
     <Compile Include="System\Plugins\LegacyPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
+	<Compile Include="System\Plugins\ProxyPlugin.cs">
+      <DependentUpon>PluginManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="System\Loading.cs" />
     <Compile Include="System\MainLoop.cs" />
     <Compile Include="System\Plugins\NetPlugin.cs">
@@ -356,7 +356,7 @@
     <Compile Include="System\Input\JoystickManager.StandardJoystick.cs">
       <DependentUpon>JoystickManager.cs</DependentUpon>
     </Compile>
-	<Compile Include="System\Input\JoystickManager.RailDriver32.cs">
+    <Compile Include="System\Input\JoystickManager.RailDriver32.cs">
       <DependentUpon>JoystickManager.cs</DependentUpon>
     </Compile>
     <Compile Include="System\Input\JoystickManager.RailDriver64.cs">
