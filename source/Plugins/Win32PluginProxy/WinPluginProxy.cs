@@ -9,7 +9,8 @@ namespace WCFServer
 {
 	public class AtsPluginProxyService : IAtsPluginProxy
 	{
-
+		private GCHandle PanelHandle = new GCHandle();
+		private GCHandle SoundHandle = new GCHandle();
 		private string PluginFile;
 
 		public void SetPluginFile(string fileName)
@@ -76,6 +77,7 @@ namespace WCFServer
 				return false;
 			}
 			try {
+				Console.WriteLine(@"Initialising in mode: " + mode);
 				Win32Initialize((int)mode);
 			} catch (Exception ex)
 			{
@@ -83,6 +85,14 @@ namespace WCFServer
 				return false;
 			}
 			Console.WriteLine(@"Plugin loaded successfully.");
+			if (PanelHandle.IsAllocated) {
+				PanelHandle.Free();
+			}
+			if (SoundHandle.IsAllocated) {
+				SoundHandle.Free();
+			}
+			PanelHandle = GCHandle.Alloc(Panel, GCHandleType.Pinned);
+			SoundHandle = GCHandle.Alloc(Sound, GCHandleType.Pinned);
 			return true;
 		}
 
@@ -94,18 +104,28 @@ namespace WCFServer
 			} catch (Exception ex) {
 				Callback.ReportError(ex.ToString());
 			}
+			if (PanelHandle.IsAllocated) {
+				PanelHandle.Free();
+			}
+			if (SoundHandle.IsAllocated) {
+				SoundHandle.Free();
+			}
 			Console.WriteLine(@"Plugin unloaded successfuly.");
 		}
 
 		public void BeginJump(InitializationModes mode)
 		{
 			try {
+				Console.WriteLine(@"Starting jump with mode:" + mode);
 				Win32Initialize((int)mode);
 			} catch (Exception ex) {
 				Callback.ReportError(ex.ToString());
 			}
 		}
 
+		private readonly int[] Panel = new int[256];
+		private readonly int[] Sound = new int[256];
+		
 		public ElapseProxy Elapse(ElapseProxy ProxyData)
 		{
 			try
@@ -136,7 +156,7 @@ namespace WCFServer
 					win32Handles.Power = ProxyData.Data.Handles.PowerNotch;
 					win32Handles.Reverser = ProxyData.Data.Handles.Reverser;
 					win32Handles.ConstantSpeed = ProxyData.Data.Handles.ConstSpeed ? 1 : 2;
-					Win32Elapse(ref win32Handles.Brake, ref win32State.Location, ref ProxyData.Panel[0], ref ProxyData.Sound[0]);
+					Win32Elapse(ref win32Handles.Brake, ref win32State.Location, ref Panel[0], ref Sound[0]);
 					ProxyData.Data.Handles.Reverser = win32Handles.Reverser;
 					ProxyData.Data.Handles.PowerNotch = win32Handles.Power;
 					ProxyData.Data.Handles.BrakeNotch = win32Handles.Brake;
@@ -152,13 +172,23 @@ namespace WCFServer
 					{
 						//this.PluginValid = false;
 					}
+					ProxyData.Panel = Panel;
+					ProxyData.Sound = Sound;
+					/*
+					for (int i = 0; i < Sound.Length; i++)
+					{
+						if (Sound[i] == 1)
+						{
+							Sound[i] = 2;
+						}
+					}
+					*/
 				}
 			}
 			catch (Exception ex)
 			{
 				Callback.ReportError(ex.ToString());
 			}
-			
 			return ProxyData;
 		}
 
