@@ -107,7 +107,7 @@ namespace OpenBve
 
 	    public void setPluginFile(string fileName)
 	    {
-		    pipeProxy.SetPluginFile(fileName);
+		    pipeProxy.SetPluginFile(fileName, Process.GetCurrentProcess().Id);
 	    }
 
 	    public bool load(VehicleSpecs specs, InitializationModes mode)

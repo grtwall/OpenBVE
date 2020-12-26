@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
+using System.Threading;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interop;
 
@@ -12,9 +14,29 @@ namespace WCFServer
 		private GCHandle PanelHandle = new GCHandle();
 		private GCHandle SoundHandle = new GCHandle();
 		private string PluginFile;
+		private Process currentSimulation;
+		private Thread WatchDogThread;
 
-		public void SetPluginFile(string fileName)
+		private void WatchDog()
 		{
+			/*
+			 * Watchdog thread to cleanup the plugin host if the game terminates unexpectedly
+			 */
+			while (true)
+			{
+				if (currentSimulation.HasExited)
+				{
+					Environment.Exit(0);
+				}
+				Thread.Sleep(1000);
+			}
+		}
+
+		public void SetPluginFile(string fileName, int SimulationProcessID)
+		{
+			currentSimulation = Process.GetProcessById(SimulationProcessID);
+			WatchDogThread = new Thread(WatchDog);
+			WatchDogThread.Start();
 			Console.WriteLine(@"Setting plugin file " + fileName);
 			this.PluginFile = fileName;
 		}
@@ -174,15 +196,6 @@ namespace WCFServer
 					}
 					ProxyData.Panel = Panel;
 					ProxyData.Sound = Sound;
-					/*
-					for (int i = 0; i < Sound.Length; i++)
-					{
-						if (Sound[i] == 1)
-						{
-							Sound[i] = 2;
-						}
-					}
-					*/
 				}
 			}
 			catch (Exception ex)

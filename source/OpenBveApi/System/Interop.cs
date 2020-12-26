@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ServiceModel;
 using System.Threading;
 using OpenBveApi.Runtime;
@@ -31,7 +31,7 @@ namespace OpenBveApi.Interop
 	public interface IAtsPluginProxy
 	{
 		[OperationContract]
-		void SetPluginFile(string fileName);
+		void SetPluginFile(string fileName, int SimulationProcessID);
 
 		[OperationContract]
 		bool Load(VehicleSpecs specs, InitializationModes mode);
