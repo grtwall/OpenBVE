@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
+using OpenBveApi.Hosts;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interop;
 
@@ -73,7 +74,7 @@ namespace OpenBve
                     var handle = Process.GetCurrentProcess().MainWindowHandle;
                     hostProcess.StartInfo.FileName = @"Win32PluginProxy.exe";
                     hostProcess.Start();
-                    Shared.eventHostReady.WaitOne();
+                    HostInterface.Win32PluginHostReady.WaitOne();
                     pipeProxy = getPipeProxy();
                     SetForegroundWindow(handle.ToInt32());
                 }
@@ -87,7 +88,7 @@ namespace OpenBve
                 win32Dll_instances--;
                 if (win32Dll_instances == 0)
                 {
-                    Shared.eventHostShouldStop.Set();
+                    HostInterface.Win32PluginHostStopped.Set();
                     hostProcess.WaitForExit();
                 }
             }
@@ -99,7 +100,7 @@ namespace OpenBve
         public IAtsPluginProxy getPipeProxy()
         {
 			callback = new Win32CallbackHandler();
-			DuplexChannelFactory<IAtsPluginProxy> pipeFactory = new DuplexChannelFactory<IAtsPluginProxy>(new InstanceContext(callback), new NetNamedPipeBinding(), new EndpointAddress(Shared.endpointAddress));
+			DuplexChannelFactory<IAtsPluginProxy> pipeFactory = new DuplexChannelFactory<IAtsPluginProxy>(new InstanceContext(callback), new NetNamedPipeBinding(), new EndpointAddress(HostInterface.Win32PluginHostEndpointAddress));
 
             IAtsPluginProxy pipeProxy = pipeFactory.CreateChannel();
             return pipeProxy;

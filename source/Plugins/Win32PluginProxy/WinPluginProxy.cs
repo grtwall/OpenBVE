@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using System.Threading;
+using OpenBveApi.Hosts;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interop;
 
@@ -421,12 +422,12 @@ namespace WCFServer
 			using (ServiceHost host = new ServiceHost(typeof(AtsPluginProxyService), new Uri(@"net.pipe://localhost")))
 			{
 
-				host.AddServiceEndpoint(typeof(IAtsPluginProxy), new NetNamedPipeBinding(), @"pipename");
+				host.AddServiceEndpoint(typeof(IAtsPluginProxy), new NetNamedPipeBinding(), @"Win32PluginProxy");
 				host.Open();
-				Shared.eventHostReady.Set();
+				HostInterface.Win32PluginHostReady.Set();
 				
 				Console.WriteLine(@"ATS Plugin Proxy Service is available.");
-				Shared.eventHostShouldStop.WaitOne();
+				HostInterface.Win32PluginHostStopped.WaitOne();
 				host.Close();
 			}
 		}

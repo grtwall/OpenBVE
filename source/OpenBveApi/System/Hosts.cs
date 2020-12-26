@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -542,5 +543,24 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Gets the current in-game time</summary>
 		/// <returns>The time in seconds since midnight on the first day</returns>
 		public virtual double InGameTime => 0.0;
+		
+		/*
+		 * Interop with the 32-bit plugin host service
+		 */
+		
+		/// <summary>The event raised when the 32-bit host application signals it is ready to accept connections from clients</summary>
+		public static readonly EventWaitHandle Win32PluginHostReady = new EventWaitHandle(false, EventResetMode.AutoReset, @"eventHostReady");
+
+		/// <summary>The event raised when the proxy client quits and the host should stop</summary>
+		public static readonly EventWaitHandle Win32PluginHostStopped = new EventWaitHandle(false, EventResetMode.AutoReset, @"eventHostShouldStop");
+
+		/// <summary>The base pipe address</summary>
+		private const string pipeBaseAddress = @"net.pipe://localhost";
+
+		/// <summary>Pipe name</summary>
+		private const string pipeName = @"Win32PluginProxy";
+		
+		/// <summary>Complete address of the named pipe endpoint.</summary>
+		public static Uri Win32PluginHostEndpointAddress { get { return new Uri(pipeBaseAddress + '/' + pipeName); } }
 	}
 }
