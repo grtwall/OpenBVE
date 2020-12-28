@@ -100,7 +100,12 @@ namespace OpenBve {
 			if (SoundHandle.IsAllocated) {
 				SoundHandle.Free();
 			}
-			pipeProxy.Unload();
+
+			if (!externalCrashed)
+			{
+				pipeProxy.Unload();
+			}
+			
 		}
 		internal override void BeginJump(InitializationModes mode) {
 			pipeProxy.BeginJump(mode);

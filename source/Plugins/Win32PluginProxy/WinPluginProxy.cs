@@ -148,62 +148,78 @@ namespace WCFServer
 
 		private readonly int[] Panel = new int[256];
 		private readonly int[] Sound = new int[256];
+
+		private readonly object UpdateLock = new object();
 		
 		public ElapseProxy Elapse(ElapseProxy ProxyData)
 		{
-			try
+			lock (UpdateLock)
 			{
-				if (ProxyData == null)
+
+				try
 				{
-					Console.WriteLine("ProxyData was null??");
+					if (ProxyData == null)
+					{
+						Console.WriteLine("ProxyData was null??");
+					}
+					else if (ProxyData.Data.TotalTime == null)
+					{
+						Console.WriteLine("Data was null???");
+					}
+					else
+					{
+						double time = ProxyData.Data.TotalTime.Milliseconds;
+						Win32VehicleState win32State;
+						win32State.Location = ProxyData.Data.Vehicle.Location;
+						win32State.Speed = (float) ProxyData.Data.Vehicle.Speed.KilometersPerHour;
+						win32State.Time = (int) Math.Floor(time - 2073600000.0 * Math.Floor(time / 2073600000.0));
+						win32State.BcPressure = (float) ProxyData.Data.Vehicle.BcPressure;
+						win32State.MrPressure = (float) ProxyData.Data.Vehicle.MrPressure;
+						win32State.ErPressure = (float) ProxyData.Data.Vehicle.ErPressure;
+						win32State.BpPressure = (float) ProxyData.Data.Vehicle.BpPressure;
+						win32State.SapPressure = (float) ProxyData.Data.Vehicle.SapPressure;
+						win32State.Current = 0.0f;
+						Win32Handles win32Handles;
+						win32Handles.Brake = ProxyData.Data.Handles.BrakeNotch;
+						win32Handles.Power = ProxyData.Data.Handles.PowerNotch;
+						win32Handles.Reverser = ProxyData.Data.Handles.Reverser;
+						win32Handles.ConstantSpeed = ProxyData.Data.Handles.ConstSpeed ? 1 : 2;
+						Win32Elapse(ref win32Handles.Brake, ref win32State.Location, ref Panel[0], ref Sound[0]);
+						ProxyData.Data.Handles.Reverser = win32Handles.Reverser;
+						ProxyData.Data.Handles.PowerNotch = win32Handles.Power;
+						ProxyData.Data.Handles.BrakeNotch = win32Handles.Brake;
+						if (win32Handles.ConstantSpeed == 1)
+						{
+							ProxyData.Data.Handles.ConstSpeed = true;
+						}
+						else if (win32Handles.ConstantSpeed == 2)
+						{
+							ProxyData.Data.Handles.ConstSpeed = false;
+						}
+						else if (win32Handles.ConstantSpeed != 0)
+						{
+							//this.PluginValid = false;
+						}
+
+						Array.Copy(Panel, ProxyData.Panel, 256);
+						Array.Copy(Sound, ProxyData.Sound, 256);
+						for (int i = 0; i < 256; i++)
+						{
+							if (Sound[i] == 1)
+							{
+								Sound[i] = 2;
+							}
+						}
+					}
 				}
-				else if (ProxyData.Data.TotalTime == null)
+				catch (Exception ex)
 				{
-					Console.WriteLine("Data was null???");
+					Callback.ReportError(ex.ToString());
 				}
-				else
-				{
-					double time = ProxyData.Data.TotalTime.Milliseconds;
-					Win32VehicleState win32State;
-					win32State.Location = ProxyData.Data.Vehicle.Location;
-					win32State.Speed = (float) ProxyData.Data.Vehicle.Speed.KilometersPerHour;
-					win32State.Time = (int) Math.Floor(time - 2073600000.0 * Math.Floor(time / 2073600000.0));
-					win32State.BcPressure = (float) ProxyData.Data.Vehicle.BcPressure;
-					win32State.MrPressure = (float) ProxyData.Data.Vehicle.MrPressure;
-					win32State.ErPressure = (float) ProxyData.Data.Vehicle.ErPressure;
-					win32State.BpPressure = (float) ProxyData.Data.Vehicle.BpPressure;
-					win32State.SapPressure = (float) ProxyData.Data.Vehicle.SapPressure;
-					win32State.Current = 0.0f;
-					Win32Handles win32Handles;
-					win32Handles.Brake = ProxyData.Data.Handles.BrakeNotch;
-					win32Handles.Power = ProxyData.Data.Handles.PowerNotch;
-					win32Handles.Reverser = ProxyData.Data.Handles.Reverser;
-					win32Handles.ConstantSpeed = ProxyData.Data.Handles.ConstSpeed ? 1 : 2;
-					Win32Elapse(ref win32Handles.Brake, ref win32State.Location, ref Panel[0], ref Sound[0]);
-					ProxyData.Data.Handles.Reverser = win32Handles.Reverser;
-					ProxyData.Data.Handles.PowerNotch = win32Handles.Power;
-					ProxyData.Data.Handles.BrakeNotch = win32Handles.Brake;
-					if (win32Handles.ConstantSpeed == 1)
-					{
-						ProxyData.Data.Handles.ConstSpeed = true;
-					}
-					else if (win32Handles.ConstantSpeed == 2)
-					{
-						ProxyData.Data.Handles.ConstSpeed = false;
-					}
-					else if (win32Handles.ConstantSpeed != 0)
-					{
-						//this.PluginValid = false;
-					}
-					ProxyData.Panel = Panel;
-					ProxyData.Sound = Sound;
-				}
+
+				
+				return ProxyData;
 			}
-			catch (Exception ex)
-			{
-				Callback.ReportError(ex.ToString());
-			}
-			return ProxyData;
 		}
 
 		public void SetReverser(int reverser)
