@@ -28,6 +28,7 @@ using RouteManager2;
 using RouteManager2.MessageManager;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
+using OpenBve.Input;
 
 namespace OpenBve
 {
@@ -182,9 +183,9 @@ namespace OpenBve
 			MainLoop.ProcessKeyboard();
 			MainLoop.UpdateMouse(RealTimeElapsed);
 			MainLoop.ProcessControls(TimeElapsed);
-			if (JoystickManager.AttachedJoysticks.ContainsKey(JoystickManager.AbstractRailDriver.Guid))
+			if (Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
 			{
-				var railDriver = JoystickManager.AttachedJoysticks[JoystickManager.AbstractRailDriver.Guid] as JoystickManager.AbstractRailDriver;
+				var railDriver = Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] as AbstractRailDriver;
 				if (railDriver != null)
 				{
 					if (Interface.CurrentOptions.RailDriverMPH)
